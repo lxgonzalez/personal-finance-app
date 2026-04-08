@@ -82,19 +82,19 @@ export default async function TransactionsPage({
         </div>
       </div>
 
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-3 gap-2 sm:gap-3">
         <Card>
-          <CardContent className="p-3 sm:p-4">
+          <CardContent className="p-2.5 sm:p-4">
             <div className="flex items-start justify-between gap-3">
               <div className="space-y-1">
-                <p className="text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground sm:text-[11px] sm:tracking-[0.14em]">
                   Ingresos
                 </p>
-                <p className="text-lg font-bold text-success tabular-nums sm:text-2xl">
+                <p className="text-xs font-bold text-success tabular-nums sm:text-2xl">
                   {formatCurrency(totalIncome)}
                 </p>
               </div>
-              <div className="rounded-full bg-success/10 p-2 sm:p-3">
+              <div className="hidden rounded-full bg-success/10 p-2 sm:block sm:p-3">
                 <TrendingUp className="h-4 w-4 text-success sm:h-5 sm:w-5" />
               </div>
             </div>
@@ -102,17 +102,17 @@ export default async function TransactionsPage({
         </Card>
 
         <Card>
-          <CardContent className="p-3 sm:p-4">
+          <CardContent className="p-2.5 sm:p-4">
             <div className="flex items-start justify-between gap-3">
               <div className="space-y-1">
-                <p className="text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground sm:text-[11px] sm:tracking-[0.14em]">
                   Egresos
                 </p>
-                <p className="text-lg font-bold text-destructive tabular-nums sm:text-2xl">
+                <p className="text-xs font-bold text-destructive tabular-nums sm:text-2xl">
                   {formatCurrency(totalExpenses)}
                 </p>
               </div>
-              <div className="rounded-full bg-destructive/10 p-2 sm:p-3">
+              <div className="hidden rounded-full bg-destructive/10 p-2 sm:block sm:p-3">
                 <TrendingDown className="h-4 w-4 text-destructive sm:h-5 sm:w-5" />
               </div>
             </div>
@@ -120,15 +120,15 @@ export default async function TransactionsPage({
         </Card>
 
         <Card>
-          <CardContent className="p-3 sm:p-4">
+          <CardContent className="p-2.5 sm:p-4">
             <div className="flex items-start justify-between gap-3">
               <div className="space-y-1">
-                <p className="text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground sm:text-[11px] sm:tracking-[0.14em]">
                   Balance
                 </p>
                 <p
                   className={cn(
-                    "text-lg font-bold tabular-nums sm:text-2xl",
+                    "text-xs font-bold tabular-nums sm:text-2xl",
                     balance >= 0 ? "text-success" : "text-destructive",
                   )}
                 >
@@ -137,7 +137,7 @@ export default async function TransactionsPage({
               </div>
               <div
                 className={cn(
-                  "rounded-full p-2 sm:p-3",
+                  "hidden rounded-full p-2 sm:block sm:p-3",
                   balance >= 0 ? "bg-success/10" : "bg-destructive/10",
                 )}
               >
