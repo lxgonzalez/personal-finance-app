@@ -19,28 +19,7 @@ interface CategoryFormProps {
   defaultType?: TransactionType;
 }
 
-const PRESET_ICONS = [
-  { value: "🛒", label: "Compras" },
-  { value: "🍔", label: "Comida" },
-  { value: "🏠", label: "Hogar" },
-  { value: "🚗", label: "Transporte" },
-  { value: "💊", label: "Salud" },
-  { value: "📚", label: "Educacion" },
-  { value: "🎬", label: "Entretenimiento" },
-  { value: "✈️", label: "Viajes" },
-  { value: "👕", label: "Ropa" },
-  { value: "💼", label: "Trabajo" },
-  { value: "💰", label: "Ahorro" },
-  { value: "🎁", label: "Regalos" },
-  { value: "🏋️", label: "Deporte" },
-  { value: "🎮", label: "Gaming" },
-  { value: "📱", label: "Servicios" },
-  { value: "💡", label: "Luz" },
-  { value: "🔧", label: "Mantenimiento" },
-  { value: "🎨", label: "Creativo" },
-  { value: "🐕", label: "Mascotas" },
-  { value: "🌿", label: "Bienestar" },
-];
+const PRESET_ICONS = ["🛒", "🍔", "🏠", "🚗", "💊", "📚", "🎬", "✈️"];
 
 const PRESET_COLORS = [
   "#3B82F6",
@@ -94,19 +73,19 @@ export function CategoryForm({
     category?.type || defaultType,
   );
   const [name, setName] = useState(category?.name || "");
-  const [icon, setIcon] = useState(category?.icon || PRESET_ICONS[0].value);
+  const initialIcon = category?.icon || PRESET_ICONS[0];
+  const initialIsCustom = !PRESET_ICONS.includes(initialIcon);
+  const [icon, setIcon] = useState(initialIcon);
+  const [customIcon, setCustomIcon] = useState(
+    initialIsCustom ? initialIcon : "",
+  );
+  const [isCustomSelected, setIsCustomSelected] = useState(initialIsCustom);
   const [color, setColor] = useState(
     (category?.color || PRESET_COLORS[0]).toUpperCase(),
   );
   const [rgb, setRgb] = useState<RGB>(() =>
     hexToRgb(category?.color || PRESET_COLORS[0]),
   );
-  const [iconMode, setIconMode] = useState<"preset" | "custom">(() => {
-    const initialIcon = category?.icon || PRESET_ICONS[0].value;
-    return PRESET_ICONS.some((preset) => preset.value === initialIcon)
-      ? "preset"
-      : "custom";
-  });
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -123,6 +102,22 @@ export function CategoryForm({
 
     setRgb(nextRgb);
     setColor(rgbToHex(nextRgb));
+  };
+
+  const selectPresetIcon = (presetIcon: string) => {
+    setIsCustomSelected(false);
+    setIcon(presetIcon);
+  };
+
+  const selectCustomIcon = () => {
+    setIsCustomSelected(true);
+    setIcon(customIcon.trim());
+  };
+
+  const handleCustomIconChange = (value: string) => {
+    setIsCustomSelected(true);
+    setCustomIcon(value);
+    setIcon(value);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -226,68 +221,46 @@ export function CategoryForm({
 
           <div className="space-y-3">
             <Label>Icono</Label>
-            <Tabs
-              value={iconMode}
-              onValueChange={(value) =>
-                setIconMode(value as "preset" | "custom")
-              }
-            >
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="preset">Galeria</TabsTrigger>
-                <TabsTrigger value="custom">Personalizado</TabsTrigger>
-              </TabsList>
-            </Tabs>
+            <div className="grid grid-cols-5 gap-2">
+              {PRESET_ICONS.map((presetIcon) => (
+                <button
+                  key={presetIcon}
+                  type="button"
+                  onClick={() => selectPresetIcon(presetIcon)}
+                  className={`flex aspect-square items-center justify-center rounded-xl border text-xl transition-all sm:text-2xl ${
+                    !isCustomSelected && icon === presetIcon
+                      ? "border-primary bg-primary/10"
+                      : "border-border bg-muted/50 hover:border-primary/40"
+                  }`}
+                  aria-label={`Icono ${presetIcon}`}
+                >
+                  {presetIcon}
+                </button>
+              ))}
 
-            {iconMode === "preset" ? (
-              <div className="grid grid-cols-4 gap-2 sm:grid-cols-5 md:grid-cols-6">
-                {PRESET_ICONS.map((preset) => (
-                  <button
-                    key={preset.value}
-                    type="button"
-                    onClick={() => setIcon(preset.value)}
-                    className={`group relative flex aspect-square flex-col items-center justify-center overflow-hidden rounded-2xl border p-2 transition-all ${
-                      icon === preset.value
-                        ? "border-primary bg-linear-to-b from-primary/20 via-primary/10 to-background shadow-sm"
-                        : "border-border bg-linear-to-b from-muted/50 to-background hover:border-primary/40 hover:from-primary/5"
-                    }`}
-                    aria-label={`Icono ${preset.label}`}
-                  >
-                    <span
-                      className={`pointer-events-none absolute inset-x-2 top-1 h-5 rounded-full blur-lg transition-opacity ${
-                        icon === preset.value
-                          ? "bg-primary/40 opacity-100"
-                          : "bg-transparent opacity-0"
-                      }`}
-                    />
-                    <span className="text-xl sm:text-2xl">{preset.value}</span>
-                    <span
-                      className={`mt-1 truncate text-[10px] sm:text-xs ${
-                        icon === preset.value
-                          ? "text-foreground"
-                          : "text-muted-foreground"
-                      }`}
-                    >
-                      {preset.label}
-                    </span>
-                  </button>
-                ))}
-              </div>
-            ) : (
-              <div className="space-y-2 rounded-lg border bg-muted/30 p-3">
-                <Label htmlFor="custom-icon">Tu icono</Label>
-                <Input
-                  id="custom-icon"
-                  type="text"
-                  maxLength={8}
-                  placeholder="Ej: 🧋, 🏄 o cualquier emoji"
-                  value={icon}
-                  onChange={(e) => setIcon(e.target.value)}
-                />
-                <p className="text-xs text-muted-foreground">
-                  Puedes usar emojis o simbolos cortos para identificar tu
-                  categoria.
-                </p>
-              </div>
+              <button
+                type="button"
+                onClick={selectCustomIcon}
+                className={`flex aspect-square items-center justify-center rounded-xl border text-base font-semibold transition-all ${
+                  isCustomSelected
+                    ? "border-primary bg-primary/10 text-primary"
+                    : "border-dashed border-border bg-muted/40 text-muted-foreground hover:border-primary/40"
+                }`}
+                aria-label="Icono personalizado"
+              >
+                {customIcon.trim() ? customIcon : "+"}
+              </button>
+            </div>
+
+            {isCustomSelected && (
+              <Input
+                id="custom-icon"
+                type="text"
+                maxLength={8}
+                placeholder="Escribe tu icono"
+                value={customIcon}
+                onChange={(e) => handleCustomIconChange(e.target.value)}
+              />
             )}
           </div>
 

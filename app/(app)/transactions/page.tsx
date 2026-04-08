@@ -82,76 +82,87 @@ export default async function TransactionsPage({
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-2 sm:gap-3">
-        <Card>
-          <CardContent className="p-2.5 sm:p-4">
-            <div className="flex items-start justify-between gap-3">
-              <div className="space-y-1">
-                <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground sm:text-[11px] sm:tracking-[0.14em]">
-                  Ingresos
-                </p>
-                <p className="text-xs font-bold text-success tabular-nums sm:text-2xl">
-                  {formatCurrency(totalIncome)}
-                </p>
-              </div>
-              <div className="hidden rounded-full bg-success/10 p-2 sm:block sm:p-3">
-                <TrendingUp className="h-4 w-4 text-success sm:h-5 sm:w-5" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+      <section className="space-y-3">
+        <div className="space-y-1 px-1">
+          <h2 className="text-base font-semibold sm:text-lg">
+            Resumen del periodo
+          </h2>
+          <p className="text-xs text-muted-foreground sm:text-sm">
+            Totales de ingresos, egresos y balance del mes seleccionado.
+          </p>
+        </div>
 
-        <Card>
-          <CardContent className="p-2.5 sm:p-4">
-            <div className="flex items-start justify-between gap-3">
-              <div className="space-y-1">
-                <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground sm:text-[11px] sm:tracking-[0.14em]">
-                  Egresos
-                </p>
-                <p className="text-xs font-bold text-destructive tabular-nums sm:text-2xl">
-                  {formatCurrency(totalExpenses)}
-                </p>
+        <div className="grid grid-cols-3 gap-2 sm:gap-3">
+          <Card>
+            <CardContent className="p-2.5 sm:p-4">
+              <div className="flex items-start justify-between gap-3">
+                <div className="space-y-1">
+                  <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground sm:text-[11px] sm:tracking-[0.14em]">
+                    Total ingresos
+                  </p>
+                  <p className="truncate text-sm font-bold text-success tabular-nums sm:text-2xl">
+                    {formatCurrency(totalIncome)}
+                  </p>
+                </div>
+                <div className="hidden rounded-full bg-success/10 p-2 sm:block sm:p-3">
+                  <TrendingUp className="h-4 w-4 text-success sm:h-5 sm:w-5" />
+                </div>
               </div>
-              <div className="hidden rounded-full bg-destructive/10 p-2 sm:block sm:p-3">
-                <TrendingDown className="h-4 w-4 text-destructive sm:h-5 sm:w-5" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
 
-        <Card>
-          <CardContent className="p-2.5 sm:p-4">
-            <div className="flex items-start justify-between gap-3">
-              <div className="space-y-1">
-                <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground sm:text-[11px] sm:tracking-[0.14em]">
-                  Balance
-                </p>
-                <p
+          <Card>
+            <CardContent className="p-2.5 sm:p-4">
+              <div className="flex items-start justify-between gap-3">
+                <div className="space-y-1">
+                  <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground sm:text-[11px] sm:tracking-[0.14em]">
+                    Total egresos
+                  </p>
+                  <p className="truncate text-sm font-bold text-destructive tabular-nums sm:text-2xl">
+                    {formatCurrency(totalExpenses)}
+                  </p>
+                </div>
+                <div className="hidden rounded-full bg-destructive/10 p-2 sm:block sm:p-3">
+                  <TrendingDown className="h-4 w-4 text-destructive sm:h-5 sm:w-5" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-2.5 sm:p-4">
+              <div className="flex items-start justify-between gap-3">
+                <div className="space-y-1">
+                  <p className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground sm:text-[11px] sm:tracking-[0.14em]">
+                    Balance
+                  </p>
+                  <p
+                    className={cn(
+                      "truncate text-sm font-bold tabular-nums sm:text-2xl",
+                      balance >= 0 ? "text-success" : "text-destructive",
+                    )}
+                  >
+                    {formatCurrency(balance)}
+                  </p>
+                </div>
+                <div
                   className={cn(
-                    "text-xs font-bold tabular-nums sm:text-2xl",
-                    balance >= 0 ? "text-success" : "text-destructive",
+                    "hidden rounded-full p-2 sm:block sm:p-3",
+                    balance >= 0 ? "bg-success/10" : "bg-destructive/10",
                   )}
                 >
-                  {formatCurrency(balance)}
-                </p>
+                  <Wallet
+                    className={cn(
+                      "h-4 w-4 sm:h-5 sm:w-5",
+                      balance >= 0 ? "text-success" : "text-destructive",
+                    )}
+                  />
+                </div>
               </div>
-              <div
-                className={cn(
-                  "hidden rounded-full p-2 sm:block sm:p-3",
-                  balance >= 0 ? "bg-success/10" : "bg-destructive/10",
-                )}
-              >
-                <Wallet
-                  className={cn(
-                    "h-4 w-4 sm:h-5 sm:w-5",
-                    balance >= 0 ? "text-success" : "text-destructive",
-                  )}
-                />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
 
       <TransactionsList
         transactions={safeTransactions}
