@@ -12,7 +12,9 @@ export default async function DashboardPage({
 }) {
   const params = await searchParams;
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   if (!user) return null;
 
@@ -23,21 +25,17 @@ export default async function DashboardPage({
   const startDate = new Date(year, month - 1, 1).toISOString().split("T")[0];
   const endDate = new Date(year, month, 0).toISOString().split("T")[0];
 
-  const { data: transactions } = await supabase
+  const { data: transactions } = (await supabase
     .from("transactions")
     .select("*, category:categories(*)")
     .eq("user_id", user.id)
     .gte("date", startDate)
     .lte("date", endDate)
-    .order("date", { ascending: false }) as { data: TransactionWithCategory[] | null };
-
-  const { data: categories } = await supabase
-    .from("categories")
-    .select("*")
-    .or(`user_id.eq.${user.id},is_default.eq.true`) as { data: Category[] | null };
+    .order("date", { ascending: false })) as {
+    data: TransactionWithCategory[] | null;
+  };
 
   const safeTransactions = transactions || [];
-  const safeCategories = categories || [];
 
   const totalIncome = safeTransactions
     .filter((t) => t.type === "income")
@@ -51,14 +49,17 @@ export default async function DashboardPage({
 
   const expensesByCategory = safeTransactions
     .filter((t) => t.type === "expense")
-    .reduce((acc, t) => {
-      const catId = t.category_id;
-      if (!acc[catId]) {
-        acc[catId] = { category: t.category, total: 0 };
-      }
-      acc[catId].total += Number(t.amount);
-      return acc;
-    }, {} as Record<string, { category: Category; total: number }>);
+    .reduce(
+      (acc, t) => {
+        const catId = t.category_id;
+        if (!acc[catId]) {
+          acc[catId] = { category: t.category, total: 0 };
+        }
+        acc[catId].total += Number(t.amount);
+        return acc;
+      },
+      {} as Record<string, { category: Category; total: number }>,
+    );
 
   const categoryData = Object.values(expensesByCategory)
     .map((item) => ({
@@ -79,10 +80,10 @@ export default async function DashboardPage({
         <MonthSelector month={month} year={year} />
       </div>
 
-      <SummaryCards 
-        totalIncome={totalIncome} 
-        totalExpenses={totalExpenses} 
-        balance={balance} 
+      <SummaryCards
+        totalIncome={totalIncome}
+        totalExpenses={totalExpenses}
+        balance={balance}
       />
 
       <div className="grid gap-6 lg:grid-cols-2">

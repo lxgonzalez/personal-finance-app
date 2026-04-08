@@ -7,19 +7,25 @@ import type { Category } from "@/lib/types";
 
 export default async function CategoriesPage() {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   if (!user) return null;
 
-  const { data: categories } = await supabase
+  const { data: categories } = (await supabase
     .from("categories")
     .select("*")
-    .or(`user_id.eq.${user.id},is_default.eq.true`)
+    .eq("user_id", user.id)
     .order("type")
-    .order("name") as { data: Category[] | null };
+    .order("name")) as { data: Category[] | null };
 
-  const expenseCategories = (categories || []).filter((c) => c.type === "expense");
-  const incomeCategories = (categories || []).filter((c) => c.type === "income");
+  const expenseCategories = (categories || []).filter(
+    (c) => c.type === "expense",
+  );
+  const incomeCategories = (categories || []).filter(
+    (c) => c.type === "income",
+  );
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
@@ -39,14 +45,14 @@ export default async function CategoriesPage() {
       </div>
 
       <div className="space-y-8">
-        <CategoriesList 
-          title="Categorias de Gastos" 
-          categories={expenseCategories} 
+        <CategoriesList
+          title="Categorias de Gastos"
+          categories={expenseCategories}
           type="expense"
         />
-        <CategoriesList 
-          title="Categorias de Ingresos" 
-          categories={incomeCategories} 
+        <CategoriesList
+          title="Categorias de Ingresos"
+          categories={incomeCategories}
           type="income"
         />
       </div>

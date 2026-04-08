@@ -10,26 +10,28 @@ export default async function EditTransactionPage({
 }) {
   const { id } = await params;
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   if (!user) return null;
 
-  const { data: transaction } = await supabase
+  const { data: transaction } = (await supabase
     .from("transactions")
     .select("*")
     .eq("id", id)
     .eq("user_id", user.id)
-    .single() as { data: Transaction | null };
+    .single()) as { data: Transaction | null };
 
   if (!transaction) {
     notFound();
   }
 
-  const { data: categories } = await supabase
+  const { data: categories } = (await supabase
     .from("categories")
     .select("*")
-    .or(`user_id.eq.${user.id},is_default.eq.true`)
-    .order("name") as { data: Category[] | null };
+    .eq("user_id", user.id)
+    .order("name")) as { data: Category[] | null };
 
   return (
     <div className="max-w-lg mx-auto">
@@ -40,8 +42,8 @@ export default async function EditTransactionPage({
         </p>
       </div>
 
-      <TransactionForm 
-        categories={categories || []} 
+      <TransactionForm
+        categories={categories || []}
         transaction={transaction}
       />
     </div>

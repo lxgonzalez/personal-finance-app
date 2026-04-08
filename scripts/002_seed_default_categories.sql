@@ -8,18 +8,18 @@ SECURITY DEFINER
 SET search_path = public
 AS $$
 BEGIN
-  INSERT INTO categories (user_id, name, icon, color) VALUES
-    (NEW.id, 'Comida', 'utensils', '#f97316'),
-    (NEW.id, 'Transporte', 'car', '#3b82f6'),
-    (NEW.id, 'Vivienda', 'home', '#8b5cf6'),
-    (NEW.id, 'Entretenimiento', 'gamepad-2', '#ec4899'),
-    (NEW.id, 'Salud', 'heart-pulse', '#ef4444'),
-    (NEW.id, 'Educacion', 'graduation-cap', '#14b8a6'),
-    (NEW.id, 'Servicios', 'zap', '#eab308'),
-    (NEW.id, 'Compras', 'shopping-bag', '#f43f5e'),
-    (NEW.id, 'Ahorro', 'piggy-bank', '#22c55e'),
-    (NEW.id, 'Salario', 'wallet', '#10b981'),
-    (NEW.id, 'Otros', 'circle', '#6b7280');
+  INSERT INTO categories (user_id, name, type, icon, color, is_default) VALUES
+    (NEW.id, 'Comida', 'expense', '🍔', '#f97316', true),
+    (NEW.id, 'Transporte', 'expense', '🚗', '#3b82f6', true),
+    (NEW.id, 'Vivienda', 'expense', '🏠', '#8b5cf6', true),
+    (NEW.id, 'Entretenimiento', 'expense', '🎮', '#ec4899', true),
+    (NEW.id, 'Salud', 'expense', '💊', '#ef4444', true),
+    (NEW.id, 'Educacion', 'expense', '📚', '#14b8a6', true),
+    (NEW.id, 'Servicios', 'expense', '💡', '#eab308', true),
+    (NEW.id, 'Compras', 'expense', '🛒', '#f43f5e', true),
+    (NEW.id, 'Ahorro', 'expense', '💰', '#22c55e', true),
+    (NEW.id, 'Salario', 'income', '💼', '#10b981', true),
+    (NEW.id, 'Otros', 'expense', '🎁', '#6b7280', true);
   RETURN NEW;
 END;
 $$;
