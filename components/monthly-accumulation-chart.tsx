@@ -90,10 +90,13 @@ export function MonthlyAccumulationChart({
           </div>
         </div>
 
-        <ChartContainer config={chartConfig} className="h-64 w-full sm:h-85">
+        <ChartContainer
+          config={chartConfig}
+          className="h-56 w-full min-w-0 aspect-auto sm:h-85"
+        >
           <ComposedChart
             data={data}
-            margin={{ top: 10, right: 12, left: 0, bottom: 0 }}
+            margin={{ top: 8, right: 8, left: -8, bottom: 0 }}
           >
             <CartesianGrid vertical={false} strokeDasharray="3 3" />
             <XAxis
@@ -102,8 +105,14 @@ export function MonthlyAccumulationChart({
               axisLine={false}
               tickMargin={8}
               interval="preserveStartEnd"
+              tick={{ fontSize: 11 }}
             />
-            <YAxis tickLine={false} axisLine={false} />
+            <YAxis
+              tickLine={false}
+              axisLine={false}
+              tick={{ fontSize: 11 }}
+              width={34}
+            />
             <ChartTooltip
               content={
                 <ChartTooltipContent

@@ -28,11 +28,11 @@ export default async function AppLayout({
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen overflow-x-hidden bg-background">
       <DesktopSidebar user={user} />
       <div className="lg:pl-64">
         <TopBar user={user} />
-        <main className="p-4 pb-24 lg:pb-8">{children}</main>
+        <main className="overflow-x-hidden p-4 pb-24 lg:pb-8">{children}</main>
       </div>
       <MobileNav />
     </div>

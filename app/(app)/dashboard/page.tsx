@@ -135,7 +135,7 @@ export default async function DashboardPage({
     .sort((a, b) => b.total - a.total);
 
   return (
-    <div className="space-y-6 max-w-6xl mx-auto px-1 sm:px-0">
+    <div className="mx-auto max-w-6xl space-y-6 overflow-x-hidden px-1 sm:px-0">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-1">
           <h1 className="text-2xl font-bold sm:text-3xl">Panel de Control</h1>
@@ -143,7 +143,7 @@ export default async function DashboardPage({
             Vision general de tus finanzas
           </p>
         </div>
-        <div className="w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0">
+        <div className="w-full sm:w-auto pb-1 sm:pb-0">
           <MonthSelector
             month={month}
             year={year}
@@ -159,12 +159,16 @@ export default async function DashboardPage({
         accumulatedBalance={accumulatedBalance}
       />
 
-      <div className="grid gap-6 xl:grid-cols-2">
-        <ExpenseChart categoryData={categoryData} />
-        <MonthlyAccumulationChart data={monthlySummary} />
+      <div className="grid gap-4 sm:gap-6 xl:grid-cols-2">
+        <div className="min-w-0">
+          <ExpenseChart categoryData={categoryData} />
+        </div>
+        <div className="min-w-0">
+          <MonthlyAccumulationChart data={monthlySummary} />
+        </div>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-1">
+      <div className="grid gap-4 sm:gap-6 lg:grid-cols-1">
         <RecentTransactions
           transactions={safeTransactions.slice(0, 5)}
           month={month}

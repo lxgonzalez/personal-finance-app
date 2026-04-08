@@ -68,22 +68,24 @@ export function MonthSelector({
   };
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-1.5 sm:gap-2">
       <Button
         variant="outline"
         size="icon"
+        className="h-9 w-9 sm:h-10 sm:w-10"
         onClick={() => navigateMonth("prev")}
       >
         <ChevronLeft className="h-4 w-4" />
       </Button>
-      <div className="w-36 text-center">
-        <span className="font-medium">
+      <div className="w-28 text-center sm:w-36">
+        <span className="text-sm font-medium sm:text-base">
           {MONTHS[month - 1]} {year}
         </span>
       </div>
       <Button
         variant="outline"
         size="icon"
+        className="h-9 w-9 sm:h-10 sm:w-10"
         onClick={() => navigateMonth("next")}
       >
         <ChevronRight className="h-4 w-4" />
