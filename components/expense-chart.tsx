@@ -1,7 +1,14 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  Legend,
+  Tooltip,
+} from "recharts";
 import type { Category } from "@/lib/types";
 
 interface CategoryData {
@@ -39,7 +46,7 @@ export function ExpenseChart({ categoryData }: ExpenseChartProps) {
         <CardHeader>
           <CardTitle className="text-lg">Gastos por Categoria</CardTitle>
         </CardHeader>
-        <CardContent className="flex items-center justify-center h-64">
+        <CardContent className="flex items-center justify-center h-52 sm:h-64">
           <p className="text-muted-foreground">No hay gastos en este periodo</p>
         </CardContent>
       </Card>
@@ -57,16 +64,16 @@ export function ExpenseChart({ categoryData }: ExpenseChartProps) {
       <CardHeader>
         <CardTitle className="text-lg">Gastos por Categoria</CardTitle>
       </CardHeader>
-      <CardContent>
-        <div className="h-64">
+      <CardContent className="space-y-3">
+        <div className="h-56 sm:h-64">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
                 data={chartData}
                 cx="50%"
                 cy="50%"
-                innerRadius={50}
-                outerRadius={80}
+                innerRadius={40}
+                outerRadius={70}
                 paddingAngle={2}
                 dataKey="value"
               >
@@ -74,7 +81,7 @@ export function ExpenseChart({ categoryData }: ExpenseChartProps) {
                   <Cell key={`cell-${index}`} fill={entry.color} />
                 ))}
               </Pie>
-              <Tooltip 
+              <Tooltip
                 formatter={(value: number) => formatCurrency(value)}
                 contentStyle={{
                   backgroundColor: "hsl(var(--card))",
@@ -82,8 +89,11 @@ export function ExpenseChart({ categoryData }: ExpenseChartProps) {
                   borderRadius: "8px",
                 }}
               />
-              <Legend 
-                formatter={(value) => <span className="text-sm text-foreground">{value}</span>}
+              <Legend
+                className="hidden sm:block"
+                formatter={(value) => (
+                  <span className="text-sm text-foreground">{value}</span>
+                )}
               />
             </PieChart>
           </ResponsiveContainer>

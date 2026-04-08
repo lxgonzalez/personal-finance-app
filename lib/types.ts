@@ -38,3 +38,12 @@ export interface CategorySummary {
   total: number;
   percentage: number;
 }
+
+export interface MonthlyFinanceSummary {
+  month: string;
+  monthIndex: number;
+  income: number;
+  expenses: number;
+  net: number;
+  accumulated: number;
+}

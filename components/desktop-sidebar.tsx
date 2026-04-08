@@ -5,13 +5,15 @@ import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
-import { 
-  LayoutDashboard, 
-  ArrowUpDown, 
-  Tags, 
+import { buildPeriodHref } from "@/lib/period";
+import { usePeriodStore } from "@/lib/stores/period-store";
+import {
+  LayoutDashboard,
+  ArrowUpDown,
+  Tags,
   Plus,
   Wallet,
-  LogOut
+  LogOut,
 } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
 
@@ -24,6 +26,8 @@ const navItems = [
 export function DesktopSidebar({ user }: { user: User }) {
   const pathname = usePathname();
   const router = useRouter();
+  const month = usePeriodStore((state) => state.month);
+  const year = usePeriodStore((state) => state.year);
 
   const handleLogout = async () => {
     const supabase = createClient();
@@ -44,19 +48,20 @@ export function DesktopSidebar({ user }: { user: User }) {
 
         <nav className="flex-1 p-4 space-y-2">
           {navItems.map((item) => {
-            const isActive = pathname === item.href || 
+            const isActive =
+              pathname === item.href ||
               (item.href !== "/dashboard" && pathname.startsWith(item.href));
             const Icon = item.icon;
 
             return (
               <Link
                 key={item.href}
-                href={item.href}
+                href={buildPeriodHref(item.href, month, year)}
                 className={cn(
                   "flex items-center gap-3 px-4 py-3 rounded-lg transition-colors",
-                  isActive 
-                    ? "bg-primary text-primary-foreground" 
-                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  isActive
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground",
                 )}
               >
                 <Icon className="h-5 w-5" />
@@ -66,7 +71,7 @@ export function DesktopSidebar({ user }: { user: User }) {
           })}
 
           <Link
-            href="/transactions/new"
+            href={buildPeriodHref("/transactions/new", month, year)}
             className="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors mt-4"
           >
             <Plus className="h-5 w-5" />
@@ -78,7 +83,8 @@ export function DesktopSidebar({ user }: { user: User }) {
           <div className="flex items-center gap-3 mb-4 px-2">
             <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
               <span className="text-primary font-semibold">
-                {user.user_metadata?.full_name?.[0]?.toUpperCase() || user.email?.[0]?.toUpperCase()}
+                {user.user_metadata?.full_name?.[0]?.toUpperCase() ||
+                  user.email?.[0]?.toUpperCase()}
               </span>
             </div>
             <div className="flex-1 min-w-0">
@@ -90,8 +96,8 @@ export function DesktopSidebar({ user }: { user: User }) {
               </p>
             </div>
           </div>
-          <Button 
-            variant="ghost" 
+          <Button
+            variant="ghost"
             className="w-full justify-start text-muted-foreground hover:text-foreground"
             onClick={handleLogout}
           >

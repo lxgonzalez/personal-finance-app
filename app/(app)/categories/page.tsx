@@ -28,15 +28,15 @@ export default async function CategoriesPage() {
   );
 
   return (
-    <div className="space-y-6 max-w-4xl mx-auto">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">Categorias</h1>
-          <p className="text-muted-foreground">
+    <div className="space-y-6 max-w-4xl mx-auto px-1 sm:px-0">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="space-y-1">
+          <h1 className="text-2xl font-bold sm:text-3xl">Categorias</h1>
+          <p className="max-w-xl text-sm text-muted-foreground sm:text-base">
             Administra tus categorias de ingresos y gastos
           </p>
         </div>
-        <Button asChild>
+        <Button asChild className="w-full sm:w-auto">
           <Link href="/categories/new">
             <Plus className="mr-2 h-4 w-4" />
             Nueva Categoria

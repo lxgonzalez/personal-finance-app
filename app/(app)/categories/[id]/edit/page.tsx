@@ -10,15 +10,17 @@ export default async function EditCategoryPage({
 }) {
   const { id } = await params;
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   if (!user) return null;
 
-  const { data: category } = await supabase
+  const { data: category } = (await supabase
     .from("categories")
     .select("*")
     .eq("id", id)
-    .single() as { data: Category | null };
+    .single()) as { data: Category | null };
 
   if (!category) {
     notFound();
@@ -33,10 +35,10 @@ export default async function EditCategoryPage({
   }
 
   return (
-    <div className="max-w-lg mx-auto">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold">Editar Categoria</h1>
-        <p className="text-muted-foreground">
+    <div className="max-w-lg mx-auto px-1 sm:px-0">
+      <div className="mb-6 space-y-1">
+        <h1 className="text-2xl font-bold sm:text-3xl">Editar Categoria</h1>
+        <p className="text-sm text-muted-foreground sm:text-base">
           Modifica los datos de la categoria
         </p>
       </div>

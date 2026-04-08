@@ -5,10 +5,13 @@ import type { Category, Transaction } from "@/lib/types";
 
 export default async function EditTransactionPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ month?: string; year?: string }>;
 }) {
   const { id } = await params;
+  const query = await searchParams;
   const supabase = await createClient();
   const {
     data: { user },
@@ -34,10 +37,10 @@ export default async function EditTransactionPage({
     .order("name")) as { data: Category[] | null };
 
   return (
-    <div className="max-w-lg mx-auto">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold">Editar Transaccion</h1>
-        <p className="text-muted-foreground">
+    <div className="max-w-lg mx-auto px-1 sm:px-0">
+      <div className="mb-6 space-y-1">
+        <h1 className="text-2xl font-bold sm:text-3xl">Editar Transaccion</h1>
+        <p className="text-sm text-muted-foreground sm:text-base">
           Modifica los datos de la transaccion
         </p>
       </div>
@@ -45,6 +48,8 @@ export default async function EditTransactionPage({
       <TransactionForm
         categories={categories || []}
         transaction={transaction}
+        month={query.month ? parseInt(query.month) : undefined}
+        year={query.year ? parseInt(query.year) : undefined}
       />
     </div>
   );

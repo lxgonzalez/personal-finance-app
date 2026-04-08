@@ -1,22 +1,47 @@
 "use client";
 
+import { useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { buildPeriodHref } from "@/lib/period";
+import { usePeriodStore } from "@/lib/stores/period-store";
 
 interface MonthSelectorProps {
   month: number;
   year: number;
+  syncStore?: boolean;
 }
 
 const MONTHS = [
-  "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-  "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
+  "Enero",
+  "Febrero",
+  "Marzo",
+  "Abril",
+  "Mayo",
+  "Junio",
+  "Julio",
+  "Agosto",
+  "Septiembre",
+  "Octubre",
+  "Noviembre",
+  "Diciembre",
 ];
 
-export function MonthSelector({ month, year }: MonthSelectorProps) {
+export function MonthSelector({
+  month,
+  year,
+  syncStore = false,
+}: MonthSelectorProps) {
   const router = useRouter();
   const pathname = usePathname();
+  const setPeriod = usePeriodStore((state) => state.setPeriod);
+
+  useEffect(() => {
+    if (syncStore) {
+      setPeriod(month, year);
+    }
+  }, [month, year, setPeriod, syncStore]);
 
   const navigateMonth = (direction: "prev" | "next") => {
     let newMonth = month;
@@ -38,7 +63,8 @@ export function MonthSelector({ month, year }: MonthSelectorProps) {
       }
     }
 
-    router.push(`${pathname}?month=${newMonth}&year=${newYear}`);
+    setPeriod(newMonth, newYear);
+    router.push(buildPeriodHref(pathname, newMonth, newYear));
   };
 
   return (
@@ -50,7 +76,7 @@ export function MonthSelector({ month, year }: MonthSelectorProps) {
       >
         <ChevronLeft className="h-4 w-4" />
       </Button>
-      <div className="text-center min-w-[140px]">
+      <div className="w-36 text-center">
         <span className="font-medium">
           {MONTHS[month - 1]} {year}
         </span>

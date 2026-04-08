@@ -6,9 +6,13 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, TrendingUp, TrendingDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { TransactionWithCategory } from "@/lib/types";
+import { buildPeriodHref } from "@/lib/period";
+import { usePeriodStore } from "@/lib/stores/period-store";
 
 interface RecentTransactionsProps {
   transactions: TransactionWithCategory[];
+  month?: number;
+  year?: number;
 }
 
 function formatCurrency(value: number): string {
@@ -25,21 +29,34 @@ function formatDate(dateString: string): string {
   }).format(new Date(dateString));
 }
 
-export function RecentTransactions({ transactions }: RecentTransactionsProps) {
+export function RecentTransactions({
+  transactions,
+  month,
+  year,
+}: RecentTransactionsProps) {
+  const storeMonth = usePeriodStore((state) => state.month);
+  const storeYear = usePeriodStore((state) => state.year);
+  const activeMonth = month ?? storeMonth;
+  const activeYear = year ?? storeYear;
+
   if (transactions.length === 0) {
     return (
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-lg">Transacciones Recientes</CardTitle>
           <Button variant="ghost" size="sm" asChild>
-            <Link href="/transactions">
+            <Link
+              href={buildPeriodHref("/transactions", activeMonth, activeYear)}
+            >
               Ver todas
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </Button>
         </CardHeader>
         <CardContent className="flex items-center justify-center h-48">
-          <p className="text-muted-foreground">No hay transacciones en este periodo</p>
+          <p className="text-muted-foreground">
+            No hay transacciones en este periodo
+          </p>
         </CardContent>
       </Card>
     );
@@ -50,7 +67,9 @@ export function RecentTransactions({ transactions }: RecentTransactionsProps) {
       <CardHeader className="flex flex-row items-center justify-between">
         <CardTitle className="text-lg">Transacciones Recientes</CardTitle>
         <Button variant="ghost" size="sm" asChild>
-          <Link href="/transactions">
+          <Link
+            href={buildPeriodHref("/transactions", activeMonth, activeYear)}
+          >
             Ver todas
             <ArrowRight className="ml-2 h-4 w-4" />
           </Link>
@@ -68,7 +87,7 @@ export function RecentTransactions({ transactions }: RecentTransactionsProps) {
                   "p-2 rounded-full",
                   transaction.type === "income"
                     ? "bg-success/10"
-                    : "bg-destructive/10"
+                    : "bg-destructive/10",
                 )}
               >
                 {transaction.type === "income" ? (
@@ -89,7 +108,7 @@ export function RecentTransactions({ transactions }: RecentTransactionsProps) {
                 "font-semibold",
                 transaction.type === "income"
                   ? "text-success"
-                  : "text-destructive"
+                  : "text-destructive",
               )}
             >
               {transaction.type === "income" ? "+" : "-"}

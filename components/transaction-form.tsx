@@ -18,23 +18,38 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle, Loader2 } from "lucide-react";
 import type { Category, Transaction, TransactionType } from "@/lib/types";
+import { buildPeriodHref } from "@/lib/period";
+import { usePeriodStore } from "@/lib/stores/period-store";
 
 interface TransactionFormProps {
   categories: Category[];
   transaction?: Transaction;
+  month?: number;
+  year?: number;
 }
 
-export function TransactionForm({ categories, transaction }: TransactionFormProps) {
-  const [type, setType] = useState<TransactionType>(transaction?.type || "expense");
+export function TransactionForm({
+  categories,
+  transaction,
+  month,
+  year,
+}: TransactionFormProps) {
+  const [type, setType] = useState<TransactionType>(
+    transaction?.type || "expense",
+  );
   const [amount, setAmount] = useState(transaction?.amount?.toString() || "");
-  const [description, setDescription] = useState(transaction?.description || "");
+  const [description, setDescription] = useState(
+    transaction?.description || "",
+  );
   const [categoryId, setCategoryId] = useState(transaction?.category_id || "");
   const [date, setDate] = useState(
-    transaction?.date || new Date().toISOString().split("T")[0]
+    transaction?.date || new Date().toISOString().split("T")[0],
   );
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const storeMonth = usePeriodStore((state) => state.month);
+  const storeYear = usePeriodStore((state) => state.year);
 
   const filteredCategories = categories.filter((cat) => cat.type === type);
 
@@ -50,7 +65,9 @@ export function TransactionForm({ categories, transaction }: TransactionFormProp
     }
 
     const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
     if (!user) {
       setError("Necesitas iniciar sesion");
@@ -74,9 +91,7 @@ export function TransactionForm({ categories, transaction }: TransactionFormProp
         .update(transactionData)
         .eq("id", transaction.id);
     } else {
-      result = await supabase
-        .from("transactions")
-        .insert(transactionData);
+      result = await supabase.from("transactions").insert(transactionData);
     }
 
     if (result.error) {
@@ -85,7 +100,9 @@ export function TransactionForm({ categories, transaction }: TransactionFormProp
       return;
     }
 
-    router.push("/transactions");
+    router.push(
+      buildPeriodHref("/transactions", month ?? storeMonth, year ?? storeYear),
+    );
     router.refresh();
   };
 
@@ -100,10 +117,13 @@ export function TransactionForm({ categories, transaction }: TransactionFormProp
             </Alert>
           )}
 
-          <Tabs value={type} onValueChange={(v) => {
-            setType(v as TransactionType);
-            setCategoryId("");
-          }}>
+          <Tabs
+            value={type}
+            onValueChange={(v) => {
+              setType(v as TransactionType);
+              setCategoryId("");
+            }}
+          >
             <TabsList className="w-full">
               <TabsTrigger value="expense" className="flex-1">
                 Gasto
