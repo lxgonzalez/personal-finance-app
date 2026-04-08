@@ -2,10 +2,19 @@ import { createClient } from "@/lib/supabase/server";
 import { MonthSelector } from "@/components/month-selector";
 import { TransactionsList } from "@/components/transactions-list";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Plus, TrendingDown, TrendingUp, Wallet } from "lucide-react";
 import Link from "next/link";
 import type { TransactionWithCategory } from "@/lib/types";
 import { buildPeriodHref } from "@/lib/period";
+import { cn } from "@/lib/utils";
+
+function formatCurrency(value: number): string {
+  return new Intl.NumberFormat("es-US", {
+    style: "currency",
+    currency: "USD",
+  }).format(value);
+}
 
 export default async function TransactionsPage({
   searchParams,
@@ -37,6 +46,18 @@ export default async function TransactionsPage({
     data: TransactionWithCategory[] | null;
   };
 
+  const safeTransactions = transactions || [];
+
+  const totalIncome = safeTransactions
+    .filter((t) => t.type === "income")
+    .reduce((sum, t) => sum + Number(t.amount), 0);
+
+  const totalExpenses = safeTransactions
+    .filter((t) => t.type === "expense")
+    .reduce((sum, t) => sum + Number(t.amount), 0);
+
+  const balance = totalIncome - totalExpenses;
+
   return (
     <div className="space-y-6 max-w-4xl mx-auto px-1 sm:px-0">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -61,8 +82,79 @@ export default async function TransactionsPage({
         </div>
       </div>
 
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <Card>
+          <CardContent className="p-3 sm:p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div className="space-y-1">
+                <p className="text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                  Ingresos
+                </p>
+                <p className="text-lg font-bold text-success tabular-nums sm:text-2xl">
+                  {formatCurrency(totalIncome)}
+                </p>
+              </div>
+              <div className="rounded-full bg-success/10 p-2 sm:p-3">
+                <TrendingUp className="h-4 w-4 text-success sm:h-5 sm:w-5" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-3 sm:p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div className="space-y-1">
+                <p className="text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                  Egresos
+                </p>
+                <p className="text-lg font-bold text-destructive tabular-nums sm:text-2xl">
+                  {formatCurrency(totalExpenses)}
+                </p>
+              </div>
+              <div className="rounded-full bg-destructive/10 p-2 sm:p-3">
+                <TrendingDown className="h-4 w-4 text-destructive sm:h-5 sm:w-5" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-3 sm:p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div className="space-y-1">
+                <p className="text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                  Balance
+                </p>
+                <p
+                  className={cn(
+                    "text-lg font-bold tabular-nums sm:text-2xl",
+                    balance >= 0 ? "text-success" : "text-destructive",
+                  )}
+                >
+                  {formatCurrency(balance)}
+                </p>
+              </div>
+              <div
+                className={cn(
+                  "rounded-full p-2 sm:p-3",
+                  balance >= 0 ? "bg-success/10" : "bg-destructive/10",
+                )}
+              >
+                <Wallet
+                  className={cn(
+                    "h-4 w-4 sm:h-5 sm:w-5",
+                    balance >= 0 ? "text-success" : "text-destructive",
+                  )}
+                />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
       <TransactionsList
-        transactions={transactions || []}
+        transactions={safeTransactions}
         month={month}
         year={year}
       />
