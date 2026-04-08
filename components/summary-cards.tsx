@@ -25,7 +25,7 @@ export function SummaryCards({
   accumulatedBalance,
 }: SummaryCardsProps) {
   return (
-    <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+    <div className="grid grid-cols-2 gap-3">
       <Card>
         <CardContent className="p-3 sm:p-4">
           <div className="flex items-center justify-between">
@@ -33,7 +33,7 @@ export function SummaryCards({
               <p className="text-xs text-muted-foreground sm:text-sm">
                 Ingresos
               </p>
-              <p className="text-xl font-bold text-success sm:text-2xl">
+              <p className="text-base font-bold text-success sm:text-2xl">
                 {formatCurrency(totalIncome)}
               </p>
             </div>
@@ -53,7 +53,7 @@ export function SummaryCards({
               </p>
               <p
                 className={cn(
-                  "text-xl font-bold tabular-nums sm:text-2xl",
+                  "text-base font-bold tabular-nums sm:text-2xl",
                   accumulatedBalance >= 0 ? "text-success" : "text-destructive",
                 )}
               >
@@ -82,7 +82,7 @@ export function SummaryCards({
           <div className="flex items-center justify-between">
             <div>
               <p className="text-xs text-muted-foreground sm:text-sm">Gastos</p>
-              <p className="text-xl font-bold text-destructive sm:text-2xl">
+              <p className="text-base font-bold text-destructive sm:text-2xl">
                 {formatCurrency(totalExpenses)}
               </p>
             </div>
@@ -102,7 +102,7 @@ export function SummaryCards({
               </p>
               <p
                 className={cn(
-                  "text-xl font-bold sm:text-2xl",
+                  "text-base font-bold sm:text-2xl",
                   balance >= 0 ? "text-success" : "text-destructive",
                 )}
               >

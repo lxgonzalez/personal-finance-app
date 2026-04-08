@@ -63,7 +63,7 @@ export function MonthlyAccumulationChart({
         </p>
       </CardHeader>
       <CardContent className="space-y-4 sm:space-y-5">
-        <div className="grid gap-3 sm:grid-cols-3">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           <div className="rounded-2xl border border-border bg-muted/40 p-3 sm:p-4">
             <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground sm:text-xs">
               Acumulado
@@ -80,7 +80,7 @@ export function MonthlyAccumulationChart({
               {bestMonth.month}
             </p>
           </div>
-          <div className="rounded-2xl border border-border bg-muted/40 p-3 sm:p-4">
+          <div className="col-span-2 rounded-2xl border border-border bg-muted/40 p-3 sm:col-span-1 sm:p-4">
             <p className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground sm:text-xs">
               mensual top
             </p>
@@ -100,7 +100,8 @@ export function MonthlyAccumulationChart({
               dataKey="month"
               tickLine={false}
               axisLine={false}
-              tickMargin={10}
+              tickMargin={8}
+              interval="preserveStartEnd"
             />
             <YAxis tickLine={false} axisLine={false} />
             <ChartTooltip
@@ -127,9 +128,7 @@ export function MonthlyAccumulationChart({
               }
             />
             <ChartLegend
-              content={<ChartLegendContent />}
-              wrapperStyle={{ display: "none" }}
-              className="sm:block"
+              content={<ChartLegendContent className="hidden sm:flex" />}
             />
             <Bar
               dataKey="income"

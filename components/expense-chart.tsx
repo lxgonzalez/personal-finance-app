@@ -65,15 +65,15 @@ export function ExpenseChart({ categoryData }: ExpenseChartProps) {
         <CardTitle className="text-lg">Gastos por Categoria</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
-        <div className="h-56 sm:h-64">
+        <div className="h-52 sm:h-64">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
                 data={chartData}
                 cx="50%"
                 cy="50%"
-                innerRadius={40}
-                outerRadius={70}
+                innerRadius={36}
+                outerRadius={62}
                 paddingAngle={2}
                 dataKey="value"
               >
@@ -97,6 +97,23 @@ export function ExpenseChart({ categoryData }: ExpenseChartProps) {
               />
             </PieChart>
           </ResponsiveContainer>
+        </div>
+
+        <div className="grid grid-cols-2 gap-2 sm:hidden">
+          {chartData.slice(0, 4).map((item) => (
+            <div
+              key={item.name}
+              className="flex items-center gap-2 rounded-lg border border-border/70 bg-muted/30 px-2 py-1.5"
+            >
+              <span
+                className="h-2.5 w-2.5 rounded-full"
+                style={{ backgroundColor: item.color }}
+              />
+              <span className="truncate text-xs text-foreground/85">
+                {item.name}
+              </span>
+            </div>
+          ))}
         </div>
       </CardContent>
     </Card>

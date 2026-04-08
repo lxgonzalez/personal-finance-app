@@ -24,7 +24,7 @@ export function TopBar({ user }: { user: User }) {
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-card/80 backdrop-blur-sm border-b border-border lg:hidden">
+    <header className="sticky top-0 z-40 border-b border-border bg-card/85 pt-[env(safe-area-inset-top)] backdrop-blur-sm lg:hidden">
       <div className="flex items-center justify-between px-4 py-3">
         <div className="flex items-center gap-2">
           <div className="p-1.5 rounded-lg bg-primary/10">
@@ -38,7 +38,8 @@ export function TopBar({ user }: { user: User }) {
             <Button variant="ghost" size="icon" className="rounded-full">
               <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
                 <span className="text-primary font-semibold text-sm">
-                  {user.user_metadata?.full_name?.[0]?.toUpperCase() || user.email?.[0]?.toUpperCase()}
+                  {user.user_metadata?.full_name?.[0]?.toUpperCase() ||
+                    user.email?.[0]?.toUpperCase()}
                 </span>
               </div>
             </Button>
@@ -58,7 +59,10 @@ export function TopBar({ user }: { user: User }) {
               </div>
             </div>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:text-destructive">
+            <DropdownMenuItem
+              onClick={handleLogout}
+              className="text-destructive focus:text-destructive"
+            >
               <LogOut className="h-4 w-4 mr-2" />
               Salir
             </DropdownMenuItem>
