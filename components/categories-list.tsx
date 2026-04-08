@@ -57,11 +57,11 @@ export function CategoriesList({ title, categories, type }: CategoriesListProps)
         </CardHeader>
         <CardContent className="flex flex-col items-center justify-center py-8">
           <p className="text-muted-foreground mb-4">
-            Nenhuma categoria cadastrada
+            No hay categorias registradas
           </p>
           <Button asChild>
             <Link href={`/categories/new?type=${type}`}>
-              Adicionar categoria
+              Agregar categoria
             </Link>
           </Button>
         </CardContent>
@@ -95,7 +95,7 @@ export function CategoriesList({ title, categories, type }: CategoriesListProps)
                       {category.is_default && (
                         <Badge variant="secondary" className="text-xs">
                           <Lock className="h-3 w-3 mr-1" />
-                          Padrao
+                          Predeterminada
                         </Badge>
                       )}
                     </div>
@@ -120,7 +120,7 @@ export function CategoriesList({ title, categories, type }: CategoriesListProps)
                         className="text-destructive focus:text-destructive"
                       >
                         <Trash2 className="mr-2 h-4 w-4" />
-                        Excluir
+                        Eliminar
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -134,9 +134,9 @@ export function CategoriesList({ title, categories, type }: CategoriesListProps)
       <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Excluir categoria</AlertDialogTitle>
+            <AlertDialogTitle>Eliminar categoria</AlertDialogTitle>
             <AlertDialogDescription>
-              Tem certeza que deseja excluir esta categoria? As transacoes associadas nao serao excluidas, mas ficarao sem categoria.
+              Estas seguro de que quieres eliminar esta categoria? Las transacciones asociadas no se eliminaran, pero quedaran sin categoria.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -146,7 +146,7 @@ export function CategoriesList({ title, categories, type }: CategoriesListProps)
               disabled={isDeleting}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              {isDeleting ? "Excluindo..." : "Excluir"}
+              {isDeleting ? "Eliminando..." : "Eliminar"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

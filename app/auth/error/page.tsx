@@ -13,15 +13,15 @@ export default function AuthErrorPage() {
               <AlertTriangle className="h-8 w-8 text-destructive" />
             </div>
           </div>
-          <CardTitle className="text-2xl font-bold">Erro de autenticação</CardTitle>
+          <CardTitle className="text-2xl font-bold">Error de autenticacion</CardTitle>
           <CardDescription>
-            Ocorreu um erro durante o processo de autenticação. Por favor, tente novamente.
+            Ocurrio un error durante el proceso de autenticacion. Por favor, intenta de nuevo.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <Button asChild className="w-full">
             <Link href="/auth/login">
-              Voltar para login
+              Volver a iniciar sesion
             </Link>
           </Button>
         </CardContent>

@@ -27,25 +27,25 @@ export default async function CategoriesPage() {
         <div>
           <h1 className="text-2xl font-bold">Categorias</h1>
           <p className="text-muted-foreground">
-            Gerencie suas categorias de receitas e despesas
+            Administra tus categorias de ingresos y gastos
           </p>
         </div>
         <Button asChild>
           <Link href="/categories/new">
             <Plus className="mr-2 h-4 w-4" />
-            Nova Categoria
+            Nueva Categoria
           </Link>
         </Button>
       </div>
 
       <div className="space-y-8">
         <CategoriesList 
-          title="Categorias de Despesas" 
+          title="Categorias de Gastos" 
           categories={expenseCategories} 
           type="expense"
         />
         <CategoriesList 
-          title="Categorias de Receitas" 
+          title="Categorias de Ingresos" 
           categories={incomeCategories} 
           type="income"
         />

@@ -71,9 +71,9 @@ export default async function DashboardPage({
     <div className="space-y-6 max-w-6xl mx-auto">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Dashboard</h1>
+          <h1 className="text-2xl font-bold">Panel de Control</h1>
           <p className="text-muted-foreground">
-            Visao geral das suas financas
+            Vision general de tus finanzas
           </p>
         </div>
         <MonthSelector month={month} year={year} />

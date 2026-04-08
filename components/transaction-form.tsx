@@ -44,7 +44,7 @@ export function TransactionForm({ categories, transaction }: TransactionFormProp
     setError(null);
 
     if (!categoryId) {
-      setError("Selecione uma categoria");
+      setError("Selecciona una categoria");
       setIsLoading(false);
       return;
     }
@@ -53,7 +53,7 @@ export function TransactionForm({ categories, transaction }: TransactionFormProp
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {
-      setError("Voce precisa estar logado");
+      setError("Necesitas iniciar sesion");
       setIsLoading(false);
       return;
     }
@@ -106,25 +106,25 @@ export function TransactionForm({ categories, transaction }: TransactionFormProp
           }}>
             <TabsList className="w-full">
               <TabsTrigger value="expense" className="flex-1">
-                Despesa
+                Gasto
               </TabsTrigger>
               <TabsTrigger value="income" className="flex-1">
-                Receita
+                Ingreso
               </TabsTrigger>
             </TabsList>
           </Tabs>
 
           <div className="space-y-2">
-            <Label htmlFor="amount">Valor</Label>
+            <Label htmlFor="amount">Monto</Label>
             <div className="relative">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-                R$
+                $
               </span>
               <Input
                 id="amount"
                 type="text"
                 inputMode="decimal"
-                placeholder="0,00"
+                placeholder="0.00"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 className="pl-10"
@@ -134,11 +134,11 @@ export function TransactionForm({ categories, transaction }: TransactionFormProp
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description">Descricao</Label>
+            <Label htmlFor="description">Descripcion</Label>
             <Input
               id="description"
               type="text"
-              placeholder="Ex: Supermercado, Salario, etc."
+              placeholder="Ej: Supermercado, Salario, etc."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               required
@@ -149,7 +149,7 @@ export function TransactionForm({ categories, transaction }: TransactionFormProp
             <Label htmlFor="category">Categoria</Label>
             <Select value={categoryId} onValueChange={setCategoryId}>
               <SelectTrigger>
-                <SelectValue placeholder="Selecione uma categoria" />
+                <SelectValue placeholder="Selecciona una categoria" />
               </SelectTrigger>
               <SelectContent>
                 {filteredCategories.map((category) => (
@@ -165,7 +165,7 @@ export function TransactionForm({ categories, transaction }: TransactionFormProp
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="date">Data</Label>
+            <Label htmlFor="date">Fecha</Label>
             <Input
               id="date"
               type="date"
@@ -188,12 +188,12 @@ export function TransactionForm({ categories, transaction }: TransactionFormProp
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Salvando...
+                  Guardando...
                 </>
               ) : transaction ? (
-                "Salvar"
+                "Guardar"
               ) : (
-                "Adicionar"
+                "Agregar"
               )}
             </Button>
           </div>

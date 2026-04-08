@@ -31,14 +31,14 @@ interface TransactionsListProps {
 }
 
 function formatCurrency(value: number): string {
-  return new Intl.NumberFormat("pt-BR", {
+  return new Intl.NumberFormat("es-US", {
     style: "currency",
-    currency: "BRL",
+    currency: "USD",
   }).format(value);
 }
 
 function formatDate(dateString: string): string {
-  return new Intl.DateTimeFormat("pt-BR", {
+  return new Intl.DateTimeFormat("es-US", {
     day: "2-digit",
     month: "long",
     year: "numeric",
@@ -67,10 +67,10 @@ export function TransactionsList({ transactions }: TransactionsListProps) {
       <Card>
         <CardContent className="flex flex-col items-center justify-center py-12">
           <p className="text-muted-foreground mb-4">
-            Nenhuma transacao neste periodo
+            No hay transacciones en este periodo
           </p>
           <Button asChild>
-            <Link href="/transactions/new">Adicionar transacao</Link>
+            <Link href="/transactions/new">Agregar transaccion</Link>
           </Button>
         </CardContent>
       </Card>
@@ -155,7 +155,7 @@ export function TransactionsList({ transactions }: TransactionsListProps) {
                             className="text-destructive focus:text-destructive"
                           >
                             <Trash2 className="mr-2 h-4 w-4" />
-                            Excluir
+                            Eliminar
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -171,9 +171,9 @@ export function TransactionsList({ transactions }: TransactionsListProps) {
       <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Excluir transacao</AlertDialogTitle>
+            <AlertDialogTitle>Eliminar transaccion</AlertDialogTitle>
             <AlertDialogDescription>
-              Tem certeza que deseja excluir esta transacao? Esta acao nao pode ser desfeita.
+              Estas seguro de que quieres eliminar esta transaccion? Esta accion no se puede deshacer.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -183,7 +183,7 @@ export function TransactionsList({ transactions }: TransactionsListProps) {
               disabled={isDeleting}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              {isDeleting ? "Excluindo..." : "Excluir"}
+              {isDeleting ? "Eliminando..." : "Eliminar"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

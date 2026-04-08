@@ -12,14 +12,14 @@ interface RecentTransactionsProps {
 }
 
 function formatCurrency(value: number): string {
-  return new Intl.NumberFormat("pt-BR", {
+  return new Intl.NumberFormat("es-US", {
     style: "currency",
-    currency: "BRL",
+    currency: "USD",
   }).format(value);
 }
 
 function formatDate(dateString: string): string {
-  return new Intl.DateTimeFormat("pt-BR", {
+  return new Intl.DateTimeFormat("es-US", {
     day: "2-digit",
     month: "short",
   }).format(new Date(dateString));
@@ -30,7 +30,7 @@ export function RecentTransactions({ transactions }: RecentTransactionsProps) {
     return (
       <Card>
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-lg">Transacoes Recentes</CardTitle>
+          <CardTitle className="text-lg">Transacciones Recientes</CardTitle>
           <Button variant="ghost" size="sm" asChild>
             <Link href="/transactions">
               Ver todas
@@ -39,7 +39,7 @@ export function RecentTransactions({ transactions }: RecentTransactionsProps) {
           </Button>
         </CardHeader>
         <CardContent className="flex items-center justify-center h-48">
-          <p className="text-muted-foreground">Nenhuma transacao neste periodo</p>
+          <p className="text-muted-foreground">No hay transacciones en este periodo</p>
         </CardContent>
       </Card>
     );
@@ -48,7 +48,7 @@ export function RecentTransactions({ transactions }: RecentTransactionsProps) {
   return (
     <Card>
       <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-lg">Transacoes Recentes</CardTitle>
+        <CardTitle className="text-lg">Transacciones Recientes</CardTitle>
         <Button variant="ghost" size="sm" asChild>
           <Link href="/transactions">
             Ver todas

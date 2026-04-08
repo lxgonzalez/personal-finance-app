@@ -17,9 +17,9 @@ export default async function NewTransactionPage() {
   return (
     <div className="max-w-lg mx-auto">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold">Nova Transacao</h1>
+        <h1 className="text-2xl font-bold">Nueva Transaccion</h1>
         <p className="text-muted-foreground">
-          Adicione uma nova receita ou despesa
+          Agrega un nuevo ingreso o gasto
         </p>
       </div>
 

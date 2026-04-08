@@ -45,7 +45,7 @@ export function CategoryForm({ category, defaultType = "expense" }: CategoryForm
     const { data: { user } } = await supabase.auth.getUser();
 
     if (!user) {
-      setError("Voce precisa estar logado");
+      setError("Necesitas iniciar sesion");
       setIsLoading(false);
       return;
     }
@@ -96,21 +96,21 @@ export function CategoryForm({ category, defaultType = "expense" }: CategoryForm
             <Tabs value={type} onValueChange={(v) => setType(v as TransactionType)}>
               <TabsList className="w-full">
                 <TabsTrigger value="expense" className="flex-1">
-                  Despesa
+                  Gasto
                 </TabsTrigger>
                 <TabsTrigger value="income" className="flex-1">
-                  Receita
+                  Ingreso
                 </TabsTrigger>
               </TabsList>
             </Tabs>
           )}
 
           <div className="space-y-2">
-            <Label htmlFor="name">Nome da categoria</Label>
+            <Label htmlFor="name">Nombre de la categoria</Label>
             <Input
               id="name"
               type="text"
-              placeholder="Ex: Alimentacao, Transporte, etc."
+              placeholder="Ej: Alimentacion, Transporte, etc."
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
@@ -118,7 +118,7 @@ export function CategoryForm({ category, defaultType = "expense" }: CategoryForm
           </div>
 
           <div className="space-y-2">
-            <Label>Icone</Label>
+            <Label>Icono</Label>
             <div className="grid grid-cols-10 gap-2">
               {ICONS.map((i) => (
                 <button
@@ -138,7 +138,7 @@ export function CategoryForm({ category, defaultType = "expense" }: CategoryForm
           </div>
 
           <div className="space-y-2">
-            <Label>Cor</Label>
+            <Label>Color</Label>
             <div className="flex flex-wrap gap-2">
               {COLORS.map((c) => (
                 <button
@@ -157,7 +157,7 @@ export function CategoryForm({ category, defaultType = "expense" }: CategoryForm
           </div>
 
           <div className="p-4 bg-muted rounded-lg">
-            <p className="text-sm text-muted-foreground mb-2">Preview</p>
+            <p className="text-sm text-muted-foreground mb-2">Vista previa</p>
             <div className="flex items-center gap-3">
               <div
                 className="w-10 h-10 rounded-lg flex items-center justify-center text-lg"
@@ -165,7 +165,7 @@ export function CategoryForm({ category, defaultType = "expense" }: CategoryForm
               >
                 {icon}
               </div>
-              <span className="font-medium">{name || "Nome da categoria"}</span>
+              <span className="font-medium">{name || "Nombre de la categoria"}</span>
             </div>
           </div>
 
@@ -182,12 +182,12 @@ export function CategoryForm({ category, defaultType = "expense" }: CategoryForm
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Salvando...
+                  Guardando...
                 </>
               ) : category ? (
-                "Salvar"
+                "Guardar"
               ) : (
-                "Criar"
+                "Crear"
               )}
             </Button>
           </div>

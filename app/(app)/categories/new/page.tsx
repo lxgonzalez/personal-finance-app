@@ -11,9 +11,9 @@ export default async function NewCategoryPage({
   return (
     <div className="max-w-lg mx-auto">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold">Nova Categoria</h1>
+        <h1 className="text-2xl font-bold">Nueva Categoria</h1>
         <p className="text-muted-foreground">
-          Crie uma categoria personalizada
+          Crea una categoria personalizada
         </p>
       </div>
 

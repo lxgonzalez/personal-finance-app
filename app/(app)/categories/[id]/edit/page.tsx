@@ -37,7 +37,7 @@ export default async function EditCategoryPage({
       <div className="mb-6">
         <h1 className="text-2xl font-bold">Editar Categoria</h1>
         <p className="text-muted-foreground">
-          Altere os dados da categoria
+          Modifica los datos de la categoria
         </p>
       </div>
 

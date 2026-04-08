@@ -11,9 +11,9 @@ interface SummaryCardsProps {
 }
 
 function formatCurrency(value: number): string {
-  return new Intl.NumberFormat("pt-BR", {
+  return new Intl.NumberFormat("es-US", {
     style: "currency",
-    currency: "BRL",
+    currency: "USD",
   }).format(value);
 }
 
@@ -24,7 +24,7 @@ export function SummaryCards({ totalIncome, totalExpenses, balance }: SummaryCar
         <CardContent className="p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-muted-foreground">Receitas</p>
+              <p className="text-sm text-muted-foreground">Ingresos</p>
               <p className="text-2xl font-bold text-success">
                 {formatCurrency(totalIncome)}
               </p>
@@ -40,7 +40,7 @@ export function SummaryCards({ totalIncome, totalExpenses, balance }: SummaryCar
         <CardContent className="p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-muted-foreground">Despesas</p>
+              <p className="text-sm text-muted-foreground">Gastos</p>
               <p className="text-2xl font-bold text-destructive">
                 {formatCurrency(totalExpenses)}
               </p>
@@ -56,7 +56,7 @@ export function SummaryCards({ totalIncome, totalExpenses, balance }: SummaryCar
         <CardContent className="p-4">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-muted-foreground">Saldo</p>
+              <p className="text-sm text-muted-foreground">Balance</p>
               <p className={cn(
                 "text-2xl font-bold",
                 balance >= 0 ? "text-success" : "text-destructive"

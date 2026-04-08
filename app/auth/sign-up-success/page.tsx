@@ -13,19 +13,19 @@ export default function SignUpSuccessPage() {
               <Mail className="h-8 w-8 text-primary" />
             </div>
           </div>
-          <CardTitle className="text-2xl font-bold">Verifique seu e-mail</CardTitle>
+          <CardTitle className="text-2xl font-bold">Verifica tu correo</CardTitle>
           <CardDescription>
-            Enviamos um link de confirmação para o seu e-mail. Clique no link para ativar sua conta.
+            Te enviamos un enlace de confirmacion a tu correo electronico. Haz clic en el enlace para activar tu cuenta.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-sm text-muted-foreground">
-            Após confirmar seu e-mail, você poderá fazer login e começar a usar o FinControl.
+            Despues de confirmar tu correo, podras iniciar sesion y comenzar a usar FinControl.
           </p>
           <Button asChild className="w-full">
             <Link href="/auth/login">
               <Wallet className="mr-2 h-4 w-4" />
-              Ir para login
+              Ir a iniciar sesion
             </Link>
           </Button>
         </CardContent>

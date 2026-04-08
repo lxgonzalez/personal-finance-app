@@ -16,8 +16,8 @@ import {
 import type { User } from "@supabase/supabase-js";
 
 const navItems = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/transactions", label: "Transacoes", icon: ArrowUpDown },
+  { href: "/dashboard", label: "Inicio", icon: LayoutDashboard },
+  { href: "/transactions", label: "Movimientos", icon: ArrowUpDown },
   { href: "/categories", label: "Categorias", icon: Tags },
 ];
 
@@ -70,7 +70,7 @@ export function DesktopSidebar({ user }: { user: User }) {
             className="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary/10 text-primary hover:bg-primary/20 transition-colors mt-4"
           >
             <Plus className="h-5 w-5" />
-            <span className="font-medium">Nova Transacao</span>
+            <span className="font-medium">Nueva Transaccion</span>
           </Link>
         </nav>
 
@@ -96,7 +96,7 @@ export function DesktopSidebar({ user }: { user: User }) {
             onClick={handleLogout}
           >
             <LogOut className="h-4 w-4 mr-2" />
-            Sair
+            Salir
           </Button>
         </div>
       </div>

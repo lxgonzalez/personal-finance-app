@@ -60,7 +60,7 @@ export function TopBar({ user }: { user: User }) {
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:text-destructive">
               <LogOut className="h-4 w-4 mr-2" />
-              Sair
+              Salir
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

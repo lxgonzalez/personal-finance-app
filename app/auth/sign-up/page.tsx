@@ -26,13 +26,13 @@ export default function SignUpPage() {
     setError(null);
 
     if (password !== confirmPassword) {
-      setError("As senhas não coincidem");
+      setError("Las contrasenas no coinciden");
       setIsLoading(false);
       return;
     }
 
     if (password.length < 6) {
-      setError("A senha deve ter pelo menos 6 caracteres");
+      setError("La contrasena debe tener al menos 6 caracteres");
       setIsLoading(false);
       return;
     }
@@ -69,9 +69,9 @@ export default function SignUpPage() {
               <Wallet className="h-8 w-8 text-primary" />
             </div>
           </div>
-          <CardTitle className="text-2xl font-bold">Criar Conta</CardTitle>
+          <CardTitle className="text-2xl font-bold">Crear Cuenta</CardTitle>
           <CardDescription>
-            Comece a controlar suas finanças hoje
+            Comienza a controlar tus finanzas hoy
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -84,11 +84,11 @@ export default function SignUpPage() {
             )}
             
             <div className="space-y-2">
-              <Label htmlFor="name">Nome completo</Label>
+              <Label htmlFor="name">Nombre completo</Label>
               <Input
                 id="name"
                 type="text"
-                placeholder="Seu nome"
+                placeholder="Tu nombre"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
@@ -96,11 +96,11 @@ export default function SignUpPage() {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="email">E-mail</Label>
+              <Label htmlFor="email">Correo electronico</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="seu@email.com"
+                placeholder="tu@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -108,11 +108,11 @@ export default function SignUpPage() {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="password">Senha</Label>
+              <Label htmlFor="password">Contrasena</Label>
               <Input
                 id="password"
                 type="password"
-                placeholder="Mínimo 6 caracteres"
+                placeholder="Minimo 6 caracteres"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -120,11 +120,11 @@ export default function SignUpPage() {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirmar senha</Label>
+              <Label htmlFor="confirmPassword">Confirmar contrasena</Label>
               <Input
                 id="confirmPassword"
                 type="password"
-                placeholder="Repita a senha"
+                placeholder="Repite la contrasena"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
@@ -135,18 +135,18 @@ export default function SignUpPage() {
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Criando conta...
+                  Creando cuenta...
                 </>
               ) : (
-                "Criar conta"
+                "Crear cuenta"
               )}
             </Button>
           </form>
 
           <div className="mt-6 text-center text-sm text-muted-foreground">
-            Já tem uma conta?{" "}
+            {"Ya tienes una cuenta? "}
             <Link href="/auth/login" className="text-primary hover:underline font-medium">
-              Fazer login
+              Iniciar sesion
             </Link>
           </div>
         </CardContent>

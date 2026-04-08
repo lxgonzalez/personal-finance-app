@@ -50,7 +50,7 @@ export default function LoginPage() {
           </div>
           <CardTitle className="text-2xl font-bold">FinControl</CardTitle>
           <CardDescription>
-            Entre na sua conta para gerenciar suas finanças
+            Ingresa a tu cuenta para administrar tus finanzas
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -63,11 +63,11 @@ export default function LoginPage() {
             )}
             
             <div className="space-y-2">
-              <Label htmlFor="email">E-mail</Label>
+              <Label htmlFor="email">Correo electronico</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="seu@email.com"
+                placeholder="tu@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -75,11 +75,11 @@ export default function LoginPage() {
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="password">Senha</Label>
+              <Label htmlFor="password">Contrasena</Label>
               <Input
                 id="password"
                 type="password"
-                placeholder="Sua senha"
+                placeholder="Tu contrasena"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -90,18 +90,18 @@ export default function LoginPage() {
               {isLoading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Entrando...
+                  Ingresando...
                 </>
               ) : (
-                "Entrar"
+                "Ingresar"
               )}
             </Button>
           </form>
 
           <div className="mt-6 text-center text-sm text-muted-foreground">
-            Ainda não tem uma conta?{" "}
+            {"No tienes una cuenta? "}
             <Link href="/auth/sign-up" className="text-primary hover:underline font-medium">
-              Criar conta
+              Crear cuenta
             </Link>
           </div>
         </CardContent>

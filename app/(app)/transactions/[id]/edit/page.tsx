@@ -34,9 +34,9 @@ export default async function EditTransactionPage({
   return (
     <div className="max-w-lg mx-auto">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold">Editar Transacao</h1>
+        <h1 className="text-2xl font-bold">Editar Transaccion</h1>
         <p className="text-muted-foreground">
-          Altere os dados da transacao
+          Modifica los datos de la transaccion
         </p>
       </div>
 

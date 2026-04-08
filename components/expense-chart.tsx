@@ -26,9 +26,9 @@ const COLORS = [
 ];
 
 function formatCurrency(value: number): string {
-  return new Intl.NumberFormat("pt-BR", {
+  return new Intl.NumberFormat("es-US", {
     style: "currency",
-    currency: "BRL",
+    currency: "USD",
   }).format(value);
 }
 
@@ -37,10 +37,10 @@ export function ExpenseChart({ categoryData }: ExpenseChartProps) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg">Despesas por Categoria</CardTitle>
+          <CardTitle className="text-lg">Gastos por Categoria</CardTitle>
         </CardHeader>
         <CardContent className="flex items-center justify-center h-64">
-          <p className="text-muted-foreground">Nenhuma despesa neste periodo</p>
+          <p className="text-muted-foreground">No hay gastos en este periodo</p>
         </CardContent>
       </Card>
     );
@@ -55,7 +55,7 @@ export function ExpenseChart({ categoryData }: ExpenseChartProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-lg">Despesas por Categoria</CardTitle>
+        <CardTitle className="text-lg">Gastos por Categoria</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="h-64">

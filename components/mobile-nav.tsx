@@ -6,9 +6,9 @@ import { cn } from "@/lib/utils";
 import { LayoutDashboard, ArrowUpDown, Tags, Plus } from "lucide-react";
 
 const navItems = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/transactions", label: "Transacoes", icon: ArrowUpDown },
-  { href: "/transactions/new", label: "Nova", icon: Plus, isAction: true },
+  { href: "/dashboard", label: "Inicio", icon: LayoutDashboard },
+  { href: "/transactions", label: "Movimientos", icon: ArrowUpDown },
+  { href: "/transactions/new", label: "Nueva", icon: Plus, isAction: true },
   { href: "/categories", label: "Categorias", icon: Tags },
 ];
 
