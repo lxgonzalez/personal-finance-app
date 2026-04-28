@@ -8,7 +8,6 @@ import {
   ArrowUpDown,
   Tags,
   Plus,
-  CalendarDays,
   CreditCard,
 } from "lucide-react";
 import { buildPeriodHref } from "@/lib/period";
@@ -22,85 +21,65 @@ const navItems = [
   { href: "/credit-cards", label: "Tarjetas", icon: CreditCard },
 ];
 
-const MONTHS = [
-  "Ene",
-  "Feb",
-  "Mar",
-  "Abr",
-  "May",
-  "Jun",
-  "Jul",
-  "Ago",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dic",
-];
-
 export function MobileNav() {
   const pathname = usePathname();
   const month = usePeriodStore((state) => state.month);
   const year = usePeriodStore((state) => state.year);
 
   return (
-    <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-card border-t border-border z-50">
-      <div className="grid grid-cols-6 items-end gap-0.5 px-2 py-2 pb-[calc(env(safe-area-inset-bottom)+0.5rem)]">
+    <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-md border-t border-border">
+      <div
+        className="grid grid-cols-5 pb-[env(safe-area-inset-bottom)]"
+        style={{ gridTemplateRows: "1fr" }}
+      >
         {navItems.map((item, index) => {
           const isActive =
             pathname === item.href ||
             (item.href !== "/dashboard" && pathname.startsWith(item.href));
           const Icon = item.icon;
 
-          const baseClasses = cn(
-            "flex w-full flex-col items-center justify-center rounded-2xl px-1 py-2 text-center transition-colors",
-            isActive ? "text-primary" : "text-muted-foreground",
-          );
-
           if (item.isAction) {
             return (
               <Link
                 key={item.href}
                 href={buildPeriodHref(item.href, month, year)}
-                className="col-start-3 row-start-1 -mt-7 flex justify-center"
+                className="col-start-3 flex items-center justify-center py-2"
+                aria-label="Nueva transaccion"
               >
-                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-xl ring-4 ring-background">
-                  <Icon className="h-6 w-6" />
+                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg shadow-primary/30 transition-transform active:scale-95">
+                  <Icon className="h-5 w-5" />
                 </div>
               </Link>
             );
           }
 
-          // col positions: 0→1, 1→2, (action=2→col3), 3→4, 4→5
-          const colMap: Record<number, string> = {
-            0: "col-start-1",
-            1: "col-start-2",
-            3: "col-start-4",
-            4: "col-start-5",
-          };
-          const gridPositionClass = colMap[index] ?? "";
+          const colStart = index === 0 ? 1 : index === 1 ? 2 : index === 3 ? 4 : 5;
 
           return (
             <Link
               key={item.href}
               href={buildPeriodHref(item.href, month, year)}
-              className={cn(baseClasses, gridPositionClass)}
+              className={cn(
+                "flex flex-col items-center justify-center gap-1 py-3 transition-colors active:scale-95",
+                `col-start-${colStart}`,
+                isActive ? "text-primary" : "text-muted-foreground",
+              )}
             >
-              <Icon className="h-5 w-5" />
-              <span className="mt-1 text-[10px] leading-none">
+              <div className={cn(
+                "flex items-center justify-center rounded-xl p-1.5 transition-colors",
+                isActive ? "bg-primary/10" : "",
+              )}>
+                <Icon className="h-[22px] w-[22px]" />
+              </div>
+              <span className={cn(
+                "text-[10px] font-medium leading-none tracking-tight",
+                isActive ? "text-primary" : "text-muted-foreground/70",
+              )}>
                 {item.label}
               </span>
             </Link>
           );
         })}
-
-        <div className="col-start-6 flex justify-center">
-          <div className="flex min-w-0 flex-col items-center justify-center rounded-2xl px-1 py-2 text-center text-muted-foreground transition-colors">
-            <CalendarDays className="h-5 w-5" />
-            <span className="mt-1 text-[10px] leading-none">
-              {MONTHS[month - 1]}
-            </span>
-          </div>
-        </div>
       </div>
     </nav>
   );

@@ -6,7 +6,6 @@ import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -14,12 +13,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle, Loader2, CreditCard } from "lucide-react";
-import type { Category, CreditCard as CreditCardType, Transaction, TransactionType } from "@/lib/types";
+import { AlertCircle, Loader2, CreditCard, ChevronDown } from "lucide-react";
+import type {
+  Category,
+  CreditCard as CreditCardType,
+  Transaction,
+  TransactionType,
+} from "@/lib/types";
 import { buildPeriodHref } from "@/lib/period";
 import { usePeriodStore } from "@/lib/stores/period-store";
+import { cn } from "@/lib/utils";
 
 interface TransactionFormProps {
   categories: Category[];
@@ -53,15 +57,12 @@ export function TransactionForm({
     transaction?.type || "expense",
   );
   const [amount, setAmount] = useState(transaction?.amount?.toString() || "");
-  const [description, setDescription] = useState(
-    transaction?.description || "",
-  );
+  const [description, setDescription] = useState(transaction?.description || "");
   const [categoryId, setCategoryId] = useState(transaction?.category_id || "");
   const [date, setDate] = useState(
     transaction?.date || new Date().toISOString().split("T")[0],
   );
 
-  // Credit card state
   const [cardMode, setCardMode] = useState<CardMode>(getInitialCardMode(transaction));
   const [creditCardId, setCreditCardId] = useState(
     transaction?.credit_card_id || transaction?.payment_for_card_id || "",
@@ -81,9 +82,7 @@ export function TransactionForm({
   const storeYear = usePeriodStore((state) => state.year);
 
   const activeCards = creditCards.filter((c) => c.is_active);
-  // Years for billing period select: current year ± 1
   const yearOptions = [now.getFullYear() - 1, now.getFullYear(), now.getFullYear() + 1];
-
   const filteredCategories = categories.filter((cat) => cat.type === type);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -152,219 +151,245 @@ export function TransactionForm({
   };
 
   return (
-    <Card>
-      <CardContent className="pt-6">
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {error && (
-            <Alert variant="destructive">
-              <AlertCircle className="h-4 w-4" />
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          )}
+    <form onSubmit={handleSubmit} className="space-y-4">
+      {error && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
 
-          <Tabs
-            value={type}
-            onValueChange={(v) => {
-              setType(v as TransactionType);
+      {/* Type selector */}
+      <div className="grid grid-cols-2 gap-2 rounded-2xl bg-muted p-1">
+        {(["expense", "income"] as TransactionType[]).map((t) => (
+          <button
+            key={t}
+            type="button"
+            onClick={() => {
+              setType(t);
               setCategoryId("");
             }}
+            className={cn(
+              "rounded-xl py-2.5 text-sm font-semibold transition-all",
+              type === t
+                ? t === "expense"
+                  ? "bg-card text-destructive shadow-sm"
+                  : "bg-card text-success shadow-sm"
+                : "text-muted-foreground",
+            )}
           >
-            <TabsList className="w-full">
-              <TabsTrigger value="expense" className="flex-1">
-                Gasto
-              </TabsTrigger>
-              <TabsTrigger value="income" className="flex-1">
-                Ingreso
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
+            {t === "expense" ? "Gasto" : "Ingreso"}
+          </button>
+        ))}
+      </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="amount">Monto</Label>
-            <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-                $
-              </span>
-              <Input
-                id="amount"
-                type="text"
-                inputMode="decimal"
-                placeholder="0.00"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                className="pl-10"
-                required
-              />
+      {/* Amount — big and prominent */}
+      <div className="rounded-2xl bg-muted/50 px-5 py-4">
+        <p className="mb-1 text-xs font-medium text-muted-foreground uppercase tracking-wider">
+          Monto
+        </p>
+        <div className="flex items-center gap-2">
+          <span className={cn(
+            "text-3xl font-light",
+            type === "expense" ? "text-destructive" : "text-success",
+          )}>
+            $
+          </span>
+          <input
+            type="text"
+            inputMode="decimal"
+            placeholder="0.00"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            required
+            className={cn(
+              "w-full bg-transparent text-4xl font-bold tabular-nums outline-none placeholder:text-muted-foreground/30",
+              type === "expense" ? "text-destructive" : "text-success",
+            )}
+          />
+        </div>
+      </div>
+
+      {/* Description */}
+      <div className="space-y-1.5">
+        <Label htmlFor="description" className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          Descripcion
+        </Label>
+        <Input
+          id="description"
+          type="text"
+          placeholder="Ej: Supermercado, Salario..."
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          required
+          className="h-12 rounded-xl text-base"
+        />
+      </div>
+
+      {/* Category + Date — side by side on mobile */}
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div className="space-y-1.5">
+          <Label htmlFor="category" className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+            Categoria
+          </Label>
+          <Select value={categoryId} onValueChange={setCategoryId}>
+            <SelectTrigger className="h-12 rounded-xl text-base">
+              <SelectValue placeholder="Selecciona..." />
+            </SelectTrigger>
+            <SelectContent>
+              {filteredCategories.map((category) => (
+                <SelectItem key={category.id} value={category.id}>
+                  <div className="flex items-center gap-2">
+                    <span>{category.icon}</span>
+                    <span>{category.name}</span>
+                  </div>
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="space-y-1.5">
+          <Label htmlFor="date" className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+            Fecha
+          </Label>
+          <Input
+            id="date"
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            required
+            className="h-12 rounded-xl text-base"
+          />
+        </div>
+      </div>
+
+      {/* Credit card section */}
+      {type === "expense" && activeCards.length > 0 && (
+        <div className="overflow-hidden rounded-2xl border">
+          <div className="flex items-center gap-2 bg-muted/30 px-4 py-3">
+            <CreditCard className="h-4 w-4 text-muted-foreground" />
+            <span className="text-sm font-medium">Tarjeta de credito</span>
+            <span className="ml-auto text-xs text-muted-foreground">opcional</span>
+          </div>
+
+          <div className="space-y-3 p-4">
+            {/* Card mode pills */}
+            <div className="flex gap-2">
+              {(["none", "charge", "payment"] as CardMode[]).map((mode) => (
+                <button
+                  key={mode}
+                  type="button"
+                  onClick={() => {
+                    setCardMode(mode);
+                    setCreditCardId("");
+                  }}
+                  className={cn(
+                    "flex-1 rounded-lg py-2 text-xs font-medium transition-all",
+                    cardMode === mode
+                      ? "bg-primary text-primary-foreground"
+                      : "bg-muted text-muted-foreground hover:bg-muted/80",
+                  )}
+                >
+                  {mode === "none" ? "Sin tarjeta" : mode === "charge" ? "Cargo" : "Pago"}
+                </button>
+              ))}
             </div>
-          </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="description">Descripcion</Label>
-            <Input
-              id="description"
-              type="text"
-              placeholder="Ej: Supermercado, Salario, etc."
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              required
-            />
-          </div>
+            {cardMode !== "none" && (
+              <Select value={creditCardId} onValueChange={setCreditCardId}>
+                <SelectTrigger className="h-11 rounded-xl">
+                  <SelectValue placeholder="Selecciona la tarjeta" />
+                </SelectTrigger>
+                <SelectContent>
+                  {activeCards.map((card) => (
+                    <SelectItem key={card.id} value={card.id}>
+                      <div className="flex items-center gap-2">
+                        <div
+                          className="h-2.5 w-2.5 rounded-full shrink-0"
+                          style={{ backgroundColor: card.color }}
+                        />
+                        <span>
+                          {card.bank_name} · {card.card_name}
+                          {card.last_four ? ` ••${card.last_four}` : ""}
+                        </span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
 
-          <div className="space-y-2">
-            <Label htmlFor="category">Categoria</Label>
-            <Select value={categoryId} onValueChange={setCategoryId}>
-              <SelectTrigger>
-                <SelectValue placeholder="Selecciona una categoria" />
-              </SelectTrigger>
-              <SelectContent>
-                {filteredCategories.map((category) => (
-                  <SelectItem key={category.id} value={category.id}>
-                    <div className="flex items-center gap-2">
-                      <span>{category.icon}</span>
-                      <span>{category.name}</span>
-                    </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="date">Fecha</Label>
-            <Input
-              id="date"
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              required
-            />
-          </div>
-
-          {/* Credit card section — only for expenses when cards exist */}
-          {type === "expense" && activeCards.length > 0 && (
-            <div className="space-y-3 rounded-xl border bg-muted/30 p-4">
-              <div className="flex items-center gap-2">
-                <CreditCard className="h-4 w-4 text-muted-foreground" />
-                <Label className="text-sm font-medium">Tarjeta de credito</Label>
-                <span className="text-xs text-muted-foreground">(opcional)</span>
-              </div>
-
-              <Tabs
-                value={cardMode}
-                onValueChange={(v) => {
-                  setCardMode(v as CardMode);
-                  setCreditCardId("");
-                }}
-              >
-                <TabsList className="w-full">
-                  <TabsTrigger value="none" className="flex-1 text-xs">
-                    Sin tarjeta
-                  </TabsTrigger>
-                  <TabsTrigger value="charge" className="flex-1 text-xs">
-                    Cargo a tarjeta
-                  </TabsTrigger>
-                  <TabsTrigger value="payment" className="flex-1 text-xs">
-                    Pago de tarjeta
-                  </TabsTrigger>
-                </TabsList>
-              </Tabs>
-
-              {cardMode !== "none" && (
-                <Select value={creditCardId} onValueChange={setCreditCardId}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Selecciona la tarjeta" />
+            {cardMode === "payment" && creditCardId && (
+              <div className="grid grid-cols-2 gap-2">
+                <Select value={billingMonth} onValueChange={setBillingMonth}>
+                  <SelectTrigger className="h-11 rounded-xl">
+                    <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {activeCards.map((card) => (
-                      <SelectItem key={card.id} value={card.id}>
-                        <div className="flex items-center gap-2">
-                          <div
-                            className="h-2.5 w-2.5 rounded-full shrink-0"
-                            style={{ backgroundColor: card.color }}
-                          />
-                          <span>
-                            {card.bank_name} · {card.card_name}
-                            {card.last_four ? ` ••${card.last_four}` : ""}
-                          </span>
-                        </div>
+                    {MONTHS_ES.map((m, i) => (
+                      <SelectItem key={i + 1} value={(i + 1).toString()}>
+                        {m}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
-              )}
+                <Select value={billingYear} onValueChange={setBillingYear}>
+                  <SelectTrigger className="h-11 rounded-xl">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {yearOptions.map((y) => (
+                      <SelectItem key={y} value={y.toString()}>
+                        {y}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
 
-              {cardMode === "payment" && creditCardId && (
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-1.5">
-                    <Label className="text-xs">Mes del estado de cuenta</Label>
-                    <Select value={billingMonth} onValueChange={setBillingMonth}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {MONTHS_ES.map((m, i) => (
-                          <SelectItem key={i + 1} value={(i + 1).toString()}>
-                            {m}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-1.5">
-                    <Label className="text-xs">Ano</Label>
-                    <Select value={billingYear} onValueChange={setBillingYear}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {yearOptions.map((y) => (
-                          <SelectItem key={y} value={y.toString()}>
-                            {y}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-              )}
-
-              {cardMode === "charge" && (
-                <p className="text-xs text-muted-foreground">
-                  El gasto se vincula a la tarjeta. El saldo en efectivo no cambia hasta que registres el pago.
-                </p>
-              )}
-              {cardMode === "payment" && (
-                <p className="text-xs text-muted-foreground">
-                  Registra el pago en efectivo de tu tarjeta y elimina la alerta de pago pendiente.
-                </p>
-              )}
-            </div>
-          )}
-
-          <div className="flex gap-3">
-            <Button
-              type="button"
-              variant="outline"
-              className="flex-1"
-              onClick={() => router.back()}
-            >
-              Cancelar
-            </Button>
-            <Button type="submit" className="flex-1" disabled={isLoading}>
-              {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Guardando...
-                </>
-              ) : transaction ? (
-                "Guardar"
-              ) : (
-                "Agregar"
-              )}
-            </Button>
+            {cardMode === "charge" && (
+              <p className="text-xs text-muted-foreground">
+                Gasto vinculado a la tarjeta. El efectivo no cambia hasta que registres el pago.
+              </p>
+            )}
+            {cardMode === "payment" && (
+              <p className="text-xs text-muted-foreground">
+                Pago en efectivo de la tarjeta. Selecciona el mes del estado de cuenta que pagas.
+              </p>
+            )}
           </div>
-        </form>
-      </CardContent>
-    </Card>
+        </div>
+      )}
+
+      {/* Actions */}
+      <div className="flex gap-3 pt-2">
+        <Button
+          type="button"
+          variant="outline"
+          className="flex-1 h-12 rounded-xl"
+          onClick={() => router.back()}
+        >
+          Cancelar
+        </Button>
+        <Button
+          type="submit"
+          className="flex-1 h-12 rounded-xl"
+          disabled={isLoading}
+        >
+          {isLoading ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Guardando...
+            </>
+          ) : transaction ? (
+            "Guardar"
+          ) : (
+            "Agregar"
+          )}
+        </Button>
+      </div>
+    </form>
   );
 }
