@@ -1,6 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { TransactionForm } from "@/components/transaction-form";
-import type { Category } from "@/lib/types";
+import type { Category, CreditCard } from "@/lib/types";
 
 export default async function NewTransactionPage({
   searchParams,
@@ -15,11 +15,10 @@ export default async function NewTransactionPage({
 
   if (!user) return null;
 
-  const { data: categories } = (await supabase
-    .from("categories")
-    .select("*")
-    .eq("user_id", user.id)
-    .order("name")) as { data: Category[] | null };
+  const [{ data: categories }, { data: creditCards }] = await Promise.all([
+    supabase.from("categories").select("*").eq("user_id", user.id).order("name") as Promise<{ data: Category[] | null }>,
+    supabase.from("credit_cards").select("*").eq("user_id", user.id).eq("is_active", true).order("created_at") as Promise<{ data: CreditCard[] | null }>,
+  ]);
 
   return (
     <div className="max-w-lg mx-auto px-1 sm:px-0">
@@ -32,6 +31,7 @@ export default async function NewTransactionPage({
 
       <TransactionForm
         categories={categories || []}
+        creditCards={creditCards || []}
         month={params.month ? parseInt(params.month) : undefined}
         year={params.year ? parseInt(params.year) : undefined}
       />

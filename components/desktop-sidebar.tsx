@@ -14,6 +14,7 @@ import {
   Plus,
   Wallet,
   LogOut,
+  CreditCard,
 } from "lucide-react";
 import type { User } from "@supabase/supabase-js";
 
@@ -21,6 +22,7 @@ const navItems = [
   { href: "/dashboard", label: "Inicio", icon: LayoutDashboard },
   { href: "/transactions", label: "Movimientos", icon: ArrowUpDown },
   { href: "/categories", label: "Categorias", icon: Tags },
+  { href: "/credit-cards", label: "Tarjetas", icon: CreditCard },
 ];
 
 export function DesktopSidebar({ user }: { user: User }) {

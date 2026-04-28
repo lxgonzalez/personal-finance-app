@@ -9,6 +9,7 @@ import {
   Tags,
   Plus,
   CalendarDays,
+  CreditCard,
 } from "lucide-react";
 import { buildPeriodHref } from "@/lib/period";
 import { usePeriodStore } from "@/lib/stores/period-store";
@@ -18,6 +19,7 @@ const navItems = [
   { href: "/transactions", label: "Movimientos", icon: ArrowUpDown },
   { href: "/transactions/new", label: "Nueva", icon: Plus, isAction: true },
   { href: "/categories", label: "Categorias", icon: Tags },
+  { href: "/credit-cards", label: "Tarjetas", icon: CreditCard },
 ];
 
 const MONTHS = [
@@ -42,7 +44,7 @@ export function MobileNav() {
 
   return (
     <nav className="lg:hidden fixed bottom-0 left-0 right-0 bg-card border-t border-border z-50">
-      <div className="grid grid-cols-5 items-end gap-1 px-3 py-2 pb-[calc(env(safe-area-inset-bottom)+0.5rem)]">
+      <div className="grid grid-cols-6 items-end gap-0.5 px-2 py-2 pb-[calc(env(safe-area-inset-bottom)+0.5rem)]">
         {navItems.map((item, index) => {
           const isActive =
             pathname === item.href ||
@@ -50,7 +52,7 @@ export function MobileNav() {
           const Icon = item.icon;
 
           const baseClasses = cn(
-            "flex w-full flex-col items-center justify-center rounded-2xl px-2 py-2 text-center transition-colors",
+            "flex w-full flex-col items-center justify-center rounded-2xl px-1 py-2 text-center transition-colors",
             isActive ? "text-primary" : "text-muted-foreground",
           );
 
@@ -68,12 +70,14 @@ export function MobileNav() {
             );
           }
 
-          const gridPositionClass =
-            index === 0
-              ? "col-start-1"
-              : index === 1
-                ? "col-start-2"
-                : "col-start-4";
+          // col positions: 0→1, 1→2, (action=2→col3), 3→4, 4→5
+          const colMap: Record<number, string> = {
+            0: "col-start-1",
+            1: "col-start-2",
+            3: "col-start-4",
+            4: "col-start-5",
+          };
+          const gridPositionClass = colMap[index] ?? "";
 
           return (
             <Link
@@ -82,18 +86,18 @@ export function MobileNav() {
               className={cn(baseClasses, gridPositionClass)}
             >
               <Icon className="h-5 w-5" />
-              <span className="mt-1 text-[11px] leading-none">
+              <span className="mt-1 text-[10px] leading-none">
                 {item.label}
               </span>
             </Link>
           );
         })}
 
-        <div className="col-start-5 flex justify-center">
-          <div className="flex min-w-0 flex-col items-center justify-center rounded-2xl px-2 py-2 text-center text-muted-foreground transition-colors">
+        <div className="col-start-6 flex justify-center">
+          <div className="flex min-w-0 flex-col items-center justify-center rounded-2xl px-1 py-2 text-center text-muted-foreground transition-colors">
             <CalendarDays className="h-5 w-5" />
-            <span className="mt-1 text-[11px] leading-none">
-              {MONTHS[month - 1]} {year}
+            <span className="mt-1 text-[10px] leading-none">
+              {MONTHS[month - 1]}
             </span>
           </div>
         </div>

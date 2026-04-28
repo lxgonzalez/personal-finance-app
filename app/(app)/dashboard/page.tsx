@@ -4,11 +4,19 @@ import { ExpenseChart } from "@/components/expense-chart";
 import { RecentTransactions } from "@/components/recent-transactions";
 import { MonthSelector } from "@/components/month-selector";
 import { MonthlyAccumulationChart } from "@/components/monthly-accumulation-chart";
+import { CreditCardAlerts } from "@/components/credit-card-alerts";
 import type {
   TransactionWithCategory,
   Category,
+  CreditCard,
+  CreditCardWithStatus,
   MonthlyFinanceSummary,
 } from "@/lib/types";
+import {
+  getNextPaymentDate,
+  getBillingPeriodForPayment,
+  getDaysUntilPayment,
+} from "@/lib/credit-cards";
 
 export default async function DashboardPage({
   searchParams,
@@ -32,26 +40,81 @@ export default async function DashboardPage({
   const yearStartDate = new Date(year, 0, 1).toISOString().split("T")[0];
   const yearEndDate = new Date(year, 11, 31).toISOString().split("T")[0];
 
-  const [{ data: transactions }, { data: yearlyTransactions }] =
-    (await Promise.all([
-      supabase
+  const [
+    { data: transactions },
+    { data: yearlyTransactions },
+    { data: creditCards },
+  ] = (await Promise.all([
+    supabase
+      .from("transactions")
+      .select("*, category:categories(*)")
+      .eq("user_id", user.id)
+      .gte("date", startDate)
+      .lte("date", endDate)
+      .order("date", { ascending: false }),
+    supabase
+      .from("transactions")
+      .select("*, category:categories(*)")
+      .eq("user_id", user.id)
+      .gte("date", yearStartDate)
+      .lte("date", yearEndDate)
+      .order("date", { ascending: false }),
+    supabase
+      .from("credit_cards")
+      .select("*")
+      .eq("user_id", user.id)
+      .eq("is_active", true)
+      .order("created_at"),
+  ])) as [
+    { data: TransactionWithCategory[] | null },
+    { data: TransactionWithCategory[] | null },
+    { data: CreditCard[] | null },
+  ];
+
+  // Build credit card statuses for alerts
+  const today = now;
+  const cardStatuses: CreditCardWithStatus[] = await Promise.all(
+    (creditCards || []).map(async (card) => {
+      const nextPayment = getNextPaymentDate(card, today);
+      const { billingMonth, billingYear } = getBillingPeriodForPayment(card, nextPayment);
+      const daysUntil = getDaysUntilPayment(nextPayment, today);
+
+      const { data: payment } = await supabase
         .from("transactions")
-        .select("*, category:categories(*)")
+        .select("id")
         .eq("user_id", user.id)
+        .eq("payment_for_card_id", card.id)
+        .eq("payment_billing_month", billingMonth)
+        .eq("payment_billing_year", billingYear)
+        .limit(1)
+        .maybeSingle();
+
+      // Card charges this calendar month
+      const { data: expenses } = await supabase
+        .from("transactions")
+        .select("amount")
+        .eq("user_id", user.id)
+        .eq("credit_card_id", card.id)
+        .eq("type", "expense")
         .gte("date", startDate)
-        .lte("date", endDate)
-        .order("date", { ascending: false }),
-      supabase
-        .from("transactions")
-        .select("*, category:categories(*)")
-        .eq("user_id", user.id)
-        .gte("date", yearStartDate)
-        .lte("date", yearEndDate)
-        .order("date", { ascending: false }),
-    ])) as [
-      { data: TransactionWithCategory[] | null },
-      { data: TransactionWithCategory[] | null },
-    ];
+        .lte("date", endDate);
+
+      const monthlyTotal = (expenses || []).reduce(
+        (sum, t) => sum + Number(t.amount),
+        0,
+      );
+
+      return {
+        ...card,
+        next_payment_date: nextPayment.toISOString().split("T")[0],
+        billing_month: billingMonth,
+        billing_year: billingYear,
+        days_until_payment: daysUntil,
+        is_paid: !!payment,
+        monthly_total: monthlyTotal,
+      };
+    }),
+  );
 
   const safeTransactions = transactions || [];
   const safeYearTransactions = yearlyTransactions || [];
@@ -167,6 +230,10 @@ export default async function DashboardPage({
           <MonthlyAccumulationChart data={monthlySummary} />
         </div>
       </div>
+
+      {cardStatuses.length > 0 && (
+        <CreditCardAlerts cards={cardStatuses} />
+      )}
 
       <div className="grid gap-4 sm:gap-6 lg:grid-cols-1">
         <RecentTransactions
