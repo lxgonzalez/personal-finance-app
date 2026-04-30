@@ -119,21 +119,27 @@ export default async function DashboardPage({
   const safeTransactions = transactions || [];
   const safeYearTransactions = yearlyTransactions || [];
 
-  const totalIncome = safeTransactions
+  // Exclude credit card charges from cash totals — they don't move cash.
+  // Only "pago de tarjeta" (payment_for_card_id) affects cash.
+  const cashTransactions = safeTransactions.filter((t) => !t.credit_card_id);
+
+  const totalIncome = cashTransactions
     .filter((t) => t.type === "income")
     .reduce((sum, t) => sum + Number(t.amount), 0);
 
-  const totalExpenses = safeTransactions
+  const totalExpenses = cashTransactions
     .filter((t) => t.type === "expense")
     .reduce((sum, t) => sum + Number(t.amount), 0);
 
   const balance = totalIncome - totalExpenses;
 
+  const cashYearTransactions = safeYearTransactions.filter((t) => !t.credit_card_id);
+
   const monthlySummary: MonthlyFinanceSummary[] = Array.from(
     { length: 12 },
     (_, index) => {
       const monthIndex = index + 1;
-      const monthTransactions = safeYearTransactions.filter(
+      const monthTransactions = cashYearTransactions.filter(
         (transaction) => Number(transaction.date.slice(5, 7)) === monthIndex,
       );
 
@@ -176,7 +182,7 @@ export default async function DashboardPage({
 
   const accumulatedBalance = monthlySummary[month - 1]?.accumulated ?? 0;
 
-  const expensesByCategory = safeTransactions
+  const expensesByCategory = cashTransactions
     .filter((t) => t.type === "expense")
     .reduce(
       (acc, t) => {

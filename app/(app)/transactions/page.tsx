@@ -48,11 +48,15 @@ export default async function TransactionsPage({
 
   const safeTransactions = transactions || [];
 
-  const totalIncome = safeTransactions
+  // Exclude credit card charges from cash totals — they don't move cash.
+  // Only "pago de tarjeta" (payment_for_card_id) affects cash.
+  const cashTransactions = safeTransactions.filter((t) => !t.credit_card_id);
+
+  const totalIncome = cashTransactions
     .filter((t) => t.type === "income")
     .reduce((sum, t) => sum + Number(t.amount), 0);
 
-  const totalExpenses = safeTransactions
+  const totalExpenses = cashTransactions
     .filter((t) => t.type === "expense")
     .reduce((sum, t) => sum + Number(t.amount), 0);
 
