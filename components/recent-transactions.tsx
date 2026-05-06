@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, TrendingUp, TrendingDown } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, parseLocalDate } from "@/lib/utils";
 import type { TransactionWithCategory } from "@/lib/types";
 import { buildPeriodHref } from "@/lib/period";
 import { usePeriodStore } from "@/lib/stores/period-store";
@@ -26,7 +26,7 @@ function formatDate(dateString: string): string {
   return new Intl.DateTimeFormat("es-US", {
     day: "2-digit",
     month: "short",
-  }).format(new Date(dateString));
+  }).format(parseLocalDate(dateString));
 }
 
 export function RecentTransactions({

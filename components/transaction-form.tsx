@@ -23,7 +23,7 @@ import type {
 } from "@/lib/types";
 import { buildPeriodHref } from "@/lib/period";
 import { usePeriodStore } from "@/lib/stores/period-store";
-import { cn } from "@/lib/utils";
+import { cn, toDateString } from "@/lib/utils";
 
 interface TransactionFormProps {
   categories: Category[];
@@ -60,7 +60,7 @@ export function TransactionForm({
   const [description, setDescription] = useState(transaction?.description || "");
   const [categoryId, setCategoryId] = useState(transaction?.category_id || "");
   const [date, setDate] = useState(
-    transaction?.date || new Date().toISOString().split("T")[0],
+    transaction?.date || toDateString(new Date()),
   );
 
   const [cardMode, setCardMode] = useState<CardMode>(getInitialCardMode(transaction));

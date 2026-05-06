@@ -7,8 +7,10 @@ import type { CreditCard, CreditCardWithStatus } from "@/lib/types";
 import {
   getNextPaymentDate,
   getBillingPeriodForPayment,
+  getBillingPeriodDates,
   getDaysUntilPayment,
 } from "@/lib/credit-cards";
+import { toDateString } from "@/lib/utils";
 
 export default async function CreditCardsPage() {
   const supabase = await createClient();
@@ -43,13 +45,8 @@ export default async function CreditCardsPage() {
         .limit(1)
         .maybeSingle();
 
-      // Sum expenses charged to this card in the current billing month
-      const startDate = new Date(today.getFullYear(), today.getMonth(), 1)
-        .toISOString()
-        .split("T")[0];
-      const endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0)
-        .toISOString()
-        .split("T")[0];
+      // Sum expenses charged to this card in the current billing period (not calendar month)
+      const { startDate, endDate } = getBillingPeriodDates(card, billingMonth, billingYear);
 
       const { data: expenses } = await supabase
         .from("transactions")
@@ -67,7 +64,7 @@ export default async function CreditCardsPage() {
 
       return {
         ...card,
-        next_payment_date: nextPayment.toISOString().split("T")[0],
+        next_payment_date: toDateString(nextPayment),
         billing_month: billingMonth,
         billing_year: billingYear,
         days_until_payment: daysUntil,

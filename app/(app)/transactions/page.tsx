@@ -7,7 +7,7 @@ import { Plus, TrendingDown, TrendingUp, Wallet } from "lucide-react";
 import Link from "next/link";
 import type { TransactionWithCategory } from "@/lib/types";
 import { buildPeriodHref } from "@/lib/period";
-import { cn } from "@/lib/utils";
+import { cn, toDateString } from "@/lib/utils";
 
 function formatCurrency(value: number): string {
   return new Intl.NumberFormat("es-US", {
@@ -33,8 +33,8 @@ export default async function TransactionsPage({
   const month = params.month ? parseInt(params.month) : now.getMonth() + 1;
   const year = params.year ? parseInt(params.year) : now.getFullYear();
 
-  const startDate = new Date(year, month - 1, 1).toISOString().split("T")[0];
-  const endDate = new Date(year, month, 0).toISOString().split("T")[0];
+  const startDate = toDateString(new Date(year, month - 1, 1));
+  const endDate = toDateString(new Date(year, month, 0));
 
   const { data: transactions } = (await supabase
     .from("transactions")

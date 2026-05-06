@@ -15,8 +15,10 @@ import type {
 import {
   getNextPaymentDate,
   getBillingPeriodForPayment,
+  getBillingPeriodDates,
   getDaysUntilPayment,
 } from "@/lib/credit-cards";
+import { toDateString } from "@/lib/utils";
 
 export default async function DashboardPage({
   searchParams,
@@ -35,10 +37,10 @@ export default async function DashboardPage({
   const month = params.month ? parseInt(params.month) : now.getMonth() + 1;
   const year = params.year ? parseInt(params.year) : now.getFullYear();
 
-  const startDate = new Date(year, month - 1, 1).toISOString().split("T")[0];
-  const endDate = new Date(year, month, 0).toISOString().split("T")[0];
-  const yearStartDate = new Date(year, 0, 1).toISOString().split("T")[0];
-  const yearEndDate = new Date(year, 11, 31).toISOString().split("T")[0];
+  const startDate = toDateString(new Date(year, month - 1, 1));
+  const endDate = toDateString(new Date(year, month, 0));
+  const yearStartDate = toDateString(new Date(year, 0, 1));
+  const yearEndDate = toDateString(new Date(year, 11, 31));
 
   const [
     { data: transactions },
@@ -89,15 +91,16 @@ export default async function DashboardPage({
         .limit(1)
         .maybeSingle();
 
-      // Card charges this calendar month
+      // Card charges in the current billing period (cut_day+1 prev month → cut_day this month)
+      const { startDate: billingStart, endDate: billingEnd } = getBillingPeriodDates(card, billingMonth, billingYear);
       const { data: expenses } = await supabase
         .from("transactions")
         .select("amount")
         .eq("user_id", user.id)
         .eq("credit_card_id", card.id)
         .eq("type", "expense")
-        .gte("date", startDate)
-        .lte("date", endDate);
+        .gte("date", billingStart)
+        .lte("date", billingEnd);
 
       const monthlyTotal = (expenses || []).reduce(
         (sum, t) => sum + Number(t.amount),
@@ -106,7 +109,7 @@ export default async function DashboardPage({
 
       return {
         ...card,
-        next_payment_date: nextPayment.toISOString().split("T")[0],
+        next_payment_date: toDateString(nextPayment),
         billing_month: billingMonth,
         billing_year: billingYear,
         days_until_payment: daysUntil,

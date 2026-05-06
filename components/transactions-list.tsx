@@ -28,7 +28,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { cn } from "@/lib/utils";
+import { cn, parseLocalDate } from "@/lib/utils";
 import Link from "next/link";
 import type { TransactionWithCategory } from "@/lib/types";
 import { buildPeriodHref } from "@/lib/period";
@@ -52,14 +52,14 @@ function formatDate(dateString: string): string {
     day: "2-digit",
     month: "long",
     year: "numeric",
-  }).format(new Date(dateString));
+  }).format(parseLocalDate(dateString));
 }
 
 function formatShortDate(dateString: string): string {
   return new Intl.DateTimeFormat("es-US", {
     day: "2-digit",
     month: "short",
-  }).format(new Date(dateString));
+  }).format(parseLocalDate(dateString));
 }
 
 export function TransactionsList({

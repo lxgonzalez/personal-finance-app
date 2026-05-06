@@ -1,4 +1,5 @@
 import type { CreditCard } from "@/lib/types";
+import { toDateString } from "@/lib/utils";
 
 /**
  * Returns the next upcoming payment due date for a card.
@@ -74,6 +75,26 @@ export function getPaymentAlertLevel(
   if (daysUntil <= 5) return "urgent";
   if (daysUntil <= 10) return "warning";
   return null;
+}
+
+/**
+ * Returns start and end dates of a billing period.
+ * Period runs from (cut_day+1) of the month before billingMonth to cut_day of billingMonth.
+ *
+ * e.g. cut_day=5, billing=May 2026 → start=Apr 6, end=May 5
+ * e.g. cut_day=28, billing=Apr 2026 → start=Mar 29, end=Apr 28
+ */
+export function getBillingPeriodDates(
+  card: CreditCard,
+  billingMonth: number,
+  billingYear: number,
+): { startDate: string; endDate: string } {
+  const end = new Date(billingYear, billingMonth - 1, card.cut_day);
+  const start = new Date(billingYear, billingMonth - 2, card.cut_day + 1);
+  return {
+    startDate: toDateString(start),
+    endDate: toDateString(end),
+  };
 }
 
 export function formatBillingPeriod(month: number, year: number): string {
